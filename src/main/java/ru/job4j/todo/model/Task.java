@@ -1,4 +1,4 @@
-package ru.job4j.model;
+package ru.job4j.todo.model;
 
 import lombok.Data;
 import java.time.LocalDateTime;
