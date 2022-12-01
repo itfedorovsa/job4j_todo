@@ -10,7 +10,6 @@ import java.util.Optional;
 
 /**
  * Task service layer
- *
  * @author itfedorovsa (itfedorovsa@gmail.com)
  * @version 1.0
  * @since 27.11.22
@@ -30,13 +29,18 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Optional<Task> editTask(Integer id) {
-        return store.editTask(id);
+    public void updateTask(Task task) {
+        store.updateTask(task);
     }
 
     @Override
-    public Optional<Task> deleteTask(Integer id) {
-        return store.deleteTask(id);
+    public void deleteTask(Task task) {
+        store.deleteTask(task);
+    }
+
+    @Override
+    public Optional<Task> findTaskById(Integer id) {
+        return store.findTaskById(id);
     }
 
     @Override
@@ -53,5 +57,6 @@ public class SimpleTaskService implements TaskService {
     public List<Task> findFinishedTasks() {
         return store.findFinishedTasks();
     }
+
 }
 

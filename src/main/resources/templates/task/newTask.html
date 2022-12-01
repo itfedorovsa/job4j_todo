@@ -28,37 +28,29 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" opacity="3">
             <div class="navbar-nav">
                 <a class="nav-item nav-link" th:href="@{/allTasks}">All tasks</a>
-                <a class="nav-item nav-link active" href="#">New Tasks<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/newTasks}">New Tasks</a>
                 <a class="nav-item nav-link" th:href="@{/finishedTasks}">Finished Tasks</a>
             </div>
         </div>
     </nav>
-    <br/>
-    <br/>
-    <h2 align="center">New Tasks:</h2>
-    <br/>
-    <div class="card">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Task description</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="task: ${newTasks}">
-                <th th:text="${task.description}"></th>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <br/>
-    <div class="vertical-center">
-        <form th:action="@{/newTask}" method="GET" th:align="center">
-            <button type="submit" class="btn btn-primary">Create new task</button>
-        </form>
+    <br/><br/><br/>
+    <div class="row">
+        <div class="card" style="width: 100%">
+            <div class="card-header">
+                New task
+            </div>
+            <div class="card-body">
+                <form th:action="@{/formAddTask}" method="POST">
+                    <input type="hidden" name="id" value="0"/>
+                    <div class="form-group">
+                        <label for="description">Enter task's description</label>
+                        <input type="text" class="form-control" name="description" id="description">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save task</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 </body>
 </html>
-
-

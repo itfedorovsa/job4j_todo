@@ -19,13 +19,16 @@ public interface TaskRepository {
 
     Optional<Task> addTask(Task task);
 
-    Optional<Task> editTask(Integer id);
+    void updateTask(Task task);
 
-    Optional<Task> deleteTask(Integer id);
+    void deleteTask(Task task);
+
+    Optional<Task> findTaskById(Integer id);
 
     List<Task> findAllTasks();
 
     List<Task> findNewTasks();
 
     List<Task> findFinishedTasks();
+
 }

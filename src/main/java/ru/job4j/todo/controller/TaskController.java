@@ -4,7 +4,14 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 /**
  *  Task Controller
@@ -53,4 +60,66 @@ public class TaskController {
         model.addAttribute("finishedTasks", taskService.findFinishedTasks());
         return "task/finishedTasks";
     }
+
+    /**
+     * New task creating page
+     * @return newTask.html - new task creating page
+     */
+    @GetMapping("/newTask")
+    public String newTask() {
+        return "task/newTask";
+    }
+
+    @PostMapping("/formAddTask")
+    public String formAddTask(@ModelAttribute Task task) {
+        task.setDone(false);
+        taskService.addTask(task);
+        return "redirect:/allTasks";
+    }
+
+    @GetMapping("/formTaskDesc/{taskId}")
+    public String formTaskDesc(Model model, @PathVariable("taskId") int id) {
+        Optional<Task> taskById = taskService.findTaskById(id);
+        Task taskObj = new Task();
+        if (taskById.isPresent()) {
+            taskObj = taskById.get();
+        }
+        model.addAttribute("task", taskObj);
+        return "task/taskDesc";
+    }
+
+    /*@PostMapping("/taskDesc")
+    public String taskDesc(Model model, @ModelAttribute Task task) {
+                //taskService.updateTask(task);
+        return "redirect:/allTasks";
+    }*/
+
+    @PostMapping("/taskDesc")
+    public String taskDesc(Model model, @ModelAttribute Task task) {
+        //taskService.updateTask(task);
+        return "redirect:/allTasks";
+    }
+
+    @PostMapping("/completeTask")
+    public String completeTask(Model model, @ModelAttribute Task task) {
+        Task taskObj = (Task) model.getAttribute("task");
+        //if (taskObj != null) {
+            taskObj.setDone(true);
+        //}
+        taskService.updateTask(taskObj);
+        return "redirect:/allTasks";
+    }
+
+    @PostMapping("/updateTask")
+    public String updateTask(@ModelAttribute Task task) {
+        taskService.updateTask(task);
+        return "redirect:/allTasks";
+    }
+
+    @GetMapping("/formUpdateTask/{taskId}")
+    public String formUpdateTask(Model model, @PathVariable("taskId") int id) {
+        model.addAttribute("task", taskService.findTaskById(id));
+        return "task/updateTask";
+    }
+
 }
