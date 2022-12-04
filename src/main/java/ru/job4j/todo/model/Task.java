@@ -6,10 +6,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- *  Task model
- *  @author itfedorovsa (itfedorovsa@gmail.com)
- *  @since 27.11.22
- *  @version 1.0
+ * Task model
+ *
+ * @author itfedorovsa (itfedorovsa@gmail.com)
+ * @version 1.0
+ * @since 27.11.22
  */
 
 @Entity

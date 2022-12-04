@@ -1,6 +1,5 @@
 package ru.job4j.todo;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -14,10 +13,11 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
- *  Application launch class
- *  @author itfedorovsa (itfedorovsa@gmail.com)
- *  @since 03.11.22
- *  @version 1.0
+ * Application launch class
+ *
+ * @author itfedorovsa (itfedorovsa@gmail.com)
+ * @version 1.0
+ * @since 03.11.22
  */
 @SpringBootApplication
 public class Main {
@@ -25,11 +25,7 @@ public class Main {
     private Properties loadDbProperties() {
         Properties cfg = new Properties();
         try (BufferedReader io = new BufferedReader(
-                new InputStreamReader(
-                        Main.class.getClassLoader()
-                                .getResourceAsStream("db.properties")
-                )
-        )) {
+                new InputStreamReader(Main.class.getClassLoader().getResourceAsStream("db.properties")))) {
             cfg.load(io);
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -44,6 +40,7 @@ public class Main {
 
     /**
      * Creates a unique instance of SessionFactory
+     *
      * @return SessionFactory instance
      */
     @Bean(destroyMethod = "close")
@@ -55,6 +52,7 @@ public class Main {
 
     /**
      * Starts the application.
+     *
      * @param args app arguments
      */
     public static void main(String[] args) {

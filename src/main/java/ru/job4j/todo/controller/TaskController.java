@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
- *  Task Controller
- *  @author itfedorovsa (itfedorovsa@gmail.com)
- *  @since 27.11.22
- *  @version 1.0
+ * Task Controller
+ *
+ * @author itfedorovsa (itfedorovsa@gmail.com)
+ * @version 1.0
+ * @since 27.11.22
  */
 @Controller
 @ThreadSafe
@@ -30,6 +30,7 @@ public class TaskController {
 
     /**
      * All tasks page
+     *
      * @param model Model
      * @return allTasks.html - all tasks from list
      */
@@ -41,6 +42,7 @@ public class TaskController {
 
     /**
      * New tasks page
+     *
      * @param model Model
      * @return newTasks.html - new (opened) tasks from list
      */
@@ -52,6 +54,7 @@ public class TaskController {
 
     /**
      * Finished tasks page
+     *
      * @param model Model
      * @return finishedTasks.html - finished (closed) tasks from list
      */
@@ -63,6 +66,7 @@ public class TaskController {
 
     /**
      * New task creating page
+     *
      * @return newTask.html - new task creating page
      */
     @GetMapping("/newTask")
@@ -70,6 +74,12 @@ public class TaskController {
         return "task/newTask";
     }
 
+    /**
+     * Post method for adding a task
+     *
+     * @param task "task" attribute in model
+     * @return all tasks page
+     */
     @PostMapping("/formAddTask")
     public String formAddTask(@ModelAttribute Task task) {
         task.setDone(false);
@@ -77,48 +87,79 @@ public class TaskController {
         return "redirect:/allTasks";
     }
 
+    /**
+     * Page of task's description
+     *
+     * @param model Model
+     * @param id    Current task id
+     * @return taskDesc.html - page with task's description
+     */
     @GetMapping("/formTaskDesc/{taskId}")
     public String formTaskDesc(Model model, @PathVariable("taskId") int id) {
         Optional<Task> taskById = taskService.findTaskById(id);
         Task taskObj = new Task();
         if (taskById.isPresent()) {
             taskObj = taskById.get();
+            System.out.println("formTaskDesc ID: " + taskObj.getId());
         }
         model.addAttribute("task", taskObj);
         return "task/taskDesc";
     }
 
-    /*@PostMapping("/taskDesc")
-    public String taskDesc(Model model, @ModelAttribute Task task) {
-                //taskService.updateTask(task);
-        return "redirect:/allTasks";
-    }*/
-
-    @PostMapping("/taskDesc")
-    public String taskDesc(Model model, @ModelAttribute Task task) {
-        //taskService.updateTask(task);
-        return "redirect:/allTasks";
-    }
-
+    /**
+     * Post method for marking task as done
+     *
+     * @param task "task" attribute in model
+     * @return all tasks page
+     */
     @PostMapping("/completeTask")
-    public String completeTask(Model model, @ModelAttribute Task task) {
-        Task taskObj = (Task) model.getAttribute("task");
-        //if (taskObj != null) {
-            taskObj.setDone(true);
-        //}
-        taskService.updateTask(taskObj);
+    public String completeTask(@ModelAttribute Task task) {
+        task.setDone(true);
+        taskService.updateTask(task);
         return "redirect:/allTasks";
     }
 
+    /**
+     * Post method for deleting task
+     *
+     * @param task "task" attribute in model
+     * @return all tasks page
+     */
+    @PostMapping("/deleteTask")
+    public String deleteTask(@ModelAttribute Task task) {
+        System.out.println(task.getId());
+        taskService.deleteTask(task);
+        return "redirect:/allTasks";
+    }
+
+    /**
+     * Post method for updating task
+     *
+     * @param task "task" attribute in model
+     * @return all tasks page
+     */
     @PostMapping("/updateTask")
     public String updateTask(@ModelAttribute Task task) {
         taskService.updateTask(task);
         return "redirect:/allTasks";
     }
 
+    /**
+     * Page of task's description
+     *
+     * @param model Model
+     * @param id    Current task id
+     * @return updateTask.html - task updating page
+     */
     @GetMapping("/formUpdateTask/{taskId}")
     public String formUpdateTask(Model model, @PathVariable("taskId") int id) {
-        model.addAttribute("task", taskService.findTaskById(id));
+        Optional<Task> taskById = taskService.findTaskById(id);
+        Task taskObj = new Task();
+        if (taskById.isPresent()) {
+            taskObj = taskById.get();
+            System.out.println("formTaskDesc ID: " + taskObj.getId());
+        }
+        model.addAttribute("task", taskObj);
         return "task/updateTask";
     }
 

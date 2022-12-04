@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *  Task repository interface
- *  @author itfedorovsa (itfedorovsa@gmail.com)
- *  @since 27.11.22
- *  @version 1.0
+ * Task repository interface
+ *
+ * @author itfedorovsa (itfedorovsa@gmail.com)
+ * @version 1.0
+ * @since 27.11.22
  */
 @Repository
 @ThreadSafe

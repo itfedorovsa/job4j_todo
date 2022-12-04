@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *  Postgres task repository
- *  @author itfedorovsa (itfedorovsa@gmail.com)
- *  @since 27.11.22
- *  @version 1.0
+ * Postgres task repository
+ *
+ * @author itfedorovsa (itfedorovsa@gmail.com)
+ * @version 1.0
+ * @since 27.11.22
  */
 @Repository
 @ThreadSafe
@@ -58,7 +59,7 @@ public class PostgresTaskRepository implements TaskRepository {
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.update(task);
+            session.delete(task);
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
@@ -116,6 +117,7 @@ public class PostgresTaskRepository implements TaskRepository {
 
     /**
      * Standalone method to get a list of new or finished tasks
+     *
      * @param request sql-query with true or false "isDone" parameter
      * @return list of new or finished tasks
      */

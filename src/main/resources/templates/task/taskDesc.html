@@ -72,20 +72,24 @@
             </div>
             <span th:if="${!task.isDone}">
                 <div class="vertical-center">
-                    <form th:action="@{/completeTask}" method="POST" th:align="center">
+                    <form th:action="@{/completeTask}" method="POST" th:object="${task}" th:align="center">
+                        <input type="hidden" name="id" th:field="*{id}"/>
+                        <input type="hidden" name="created" th:field="*{created}"/>
+                        <input type="hidden" name="description" th:field="*{description}"/>
                         <button type="submit" class="btn btn-primary">Mark as done</button>
                     </form>
                 </div>
             <br/>
             </span>
             <div class="vertical-center">
-                <form th:action="@{/formUpdateTask}" method="GET" th:align="center">
+                <form th:action="@{|/formUpdateTask/${task.id}|}" method="GET" th:align="center">
                     <button type="submit" class="btn btn-primary">Edit task</button>
                 </form>
             </div>
             <br/>
             <div class="vertical-center">
-                <form th:action="@{/deleteTask}" method="POST" th:align="center">
+                <form th:action="@{/deleteTask}" method="POST" th:object="${task}" th:align="center">
+                    <input type="hidden" name="id" th:field="*{id}"/>
                     <button type="submit" class="btn btn-primary">Delete task</button>
                 </form>
             </div>
@@ -95,7 +99,6 @@
                     <button type="submit" class="btn btn-primary">Back</button>
                 </form>
             </div>
-            </form>
             <br/>
         </div>
     </div>
