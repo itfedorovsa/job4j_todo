@@ -3,24 +3,23 @@ package ru.job4j.todo.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
- * Task model
+ * User model
  *
  * @author itfedorovsa (itfedorovsa@gmail.com)
  * @version 1.0
- * @since 27.11.22
+ * @since 06.12.22
  */
 @Entity
-@Table(name = "tasks")
+@Table(name = "todo_user")
 @Data
-public class Task {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String description;
-    private LocalDateTime created = LocalDateTime.now();
-    private boolean isDone;
+    private String name;
+    private String login;
+    private String password;
 }

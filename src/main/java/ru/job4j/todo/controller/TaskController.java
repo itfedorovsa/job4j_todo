@@ -100,7 +100,6 @@ public class TaskController {
         Task taskObj = new Task();
         if (taskById.isPresent()) {
             taskObj = taskById.get();
-            System.out.println("formTaskDesc ID: " + taskObj.getId());
         }
         model.addAttribute("task", taskObj);
         return "task/taskDesc";
@@ -127,7 +126,6 @@ public class TaskController {
      */
     @PostMapping("/deleteTask")
     public String deleteTask(@ModelAttribute Task task) {
-        System.out.println(task.getId());
         taskService.deleteTask(task);
         return "redirect:/allTasks";
     }
@@ -148,7 +146,7 @@ public class TaskController {
      * Page of task's description
      *
      * @param model Model
-     * @param id    Current task id
+     * @param id Current task id
      * @return updateTask.html - task updating page
      */
     @GetMapping("/formUpdateTask/{taskId}")
@@ -157,7 +155,6 @@ public class TaskController {
         Task taskObj = new Task();
         if (taskById.isPresent()) {
             taskObj = taskById.get();
-            System.out.println("formTaskDesc ID: " + taskObj.getId());
         }
         model.addAttribute("task", taskObj);
         return "task/updateTask";
