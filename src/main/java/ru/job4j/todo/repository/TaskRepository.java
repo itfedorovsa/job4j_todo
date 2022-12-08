@@ -1,7 +1,5 @@
 package ru.job4j.todo.repository;
 
-import net.jcip.annotations.ThreadSafe;
-import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
 import java.util.List;
@@ -14,8 +12,6 @@ import java.util.Optional;
  * @version 1.0
  * @since 27.11.22
  */
-@Repository
-@ThreadSafe
 public interface TaskRepository {
 
     Optional<Task> addTask(Task task);

@@ -1,5 +1,6 @@
 package ru.job4j.todo.controller;
 
+import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,34 +20,34 @@ import java.util.Optional;
  * @since 06.12.22
  */
 @Controller
+@AllArgsConstructor
 @ThreadSafe
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     /**
      * Registration post page
+     *
      * @param model Model
-     * @param user empty user to fill
+     * @param user  Empty user to fill
      * @return fail or success registration page
      */
     @PostMapping("/registration")
     public String registration(Model model, @ModelAttribute User user) {
         Optional<User> regUser = userService.add(user);
-        if (regUser.isEmpty()) {
+        System.out.println(regUser.isEmpty());
+        if (regUser.isPresent() && regUser.get().getId() == 0) {
             model.addAttribute("message", "A user with this email already exists");
-            return "redirect:/error/fail";
+            return "redirect:/fail";
         }
         return "redirect:/success";
     }
 
     /**
      * Sign up form
-     * @param model Model
-     * @param httpSession HTTPSession
+     *
+     * @param model       Model
+     * @param httpSession Http Session
      * @return addUser.html - new user creating form
      */
     @GetMapping("/formAddUser")
@@ -57,8 +58,9 @@ public class UserController {
 
     /**
      * Affirmed registration page
-     * @param model Model
-     * @param httpSession HTTPSession
+     *
+     * @param model       Model
+     * @param httpSession Http Session
      * @return Affirmed registration page
      */
     @GetMapping("/success")
@@ -69,8 +71,9 @@ public class UserController {
 
     /**
      * Declined registration page
-     * @param model Model
-     * @param httpSession HTTPSession
+     *
+     * @param model       Model
+     * @param httpSession Http Session
      * @return Declined registration page
      */
     @GetMapping("/fail")
@@ -81,8 +84,9 @@ public class UserController {
 
     /**
      * Start registration form
+     *
      * @param model Model
-     * @param fail fail condition
+     * @param fail  Fail condition
      * @return login.html - log in form
      */
     @GetMapping("/loginPage")
@@ -92,14 +96,16 @@ public class UserController {
     }
 
     /**
-     *  Log in post page
-     * @param user current user model
-     * @param req request from DB on user presence
-     * @return data duplication warning or index page
+     * Log in post page
+     *
+     * @param user Current user model
+     * @param req  Request from DB on user presence
+     * @return Data duplication warning or index page
      */
     @PostMapping("/login")
     public String login(@ModelAttribute User user, HttpServletRequest req) {
-        Optional<User> userDb = userService.findByLogin(user.getLogin());
+        Optional<User> userDb = userService.findByLogin(user.getLogin(), user.getPassword());
+        System.out.println(userDb.isEmpty());
         if (userDb.isEmpty()) {
             return "redirect:/loginPage?fail=true";
         }
@@ -110,7 +116,8 @@ public class UserController {
 
     /**
      * Log out page
-     * @param httpSession HTTPSession
+     *
+     * @param httpSession Http Session
      * @return log in page
      */
     @GetMapping("/logout")
@@ -121,8 +128,9 @@ public class UserController {
 
     /**
      * User profile page
-     * @param model Model
-     * @param httpSession HTTPSession
+     *
+     * @param model       Model
+     * @param httpSession Http Session
      * @return profile.html - current user data page
      */
     @GetMapping("/profile")
@@ -133,22 +141,24 @@ public class UserController {
 
     /**
      * Updating user profile
-     * @param model Model
-     * @param httpSession HTTPSession
-     * @param userId current user id
+     *
+     * @param model       Model
+     * @param httpSession Http Session
+     * @param userId      current user id
      * @return updateProfile.html - user updating form
      */
     @GetMapping("/updateProfile/{userId}")
     public String updateProfile(Model model, HttpSession httpSession, @PathVariable("userId") int userId) {
-        model.addAttribute("user", userService.findById(userId));
-        //model.addAttribute("user", getUser(httpSession));
+        //model.addAttribute("user", userService.findById(userId));
+        model.addAttribute("user", getUser(httpSession));
         return "user/updateProfile";
     }
 
     /**
      * User update post page
-     * @param user current user
-     * @param httpSession HTTPSession
+     *
+     * @param user        current user
+     * @param httpSession Http Session
      * @return log in page to re log in
      */
     @PostMapping("/updateProfile")
@@ -162,7 +172,8 @@ public class UserController {
 
     /**
      * Gives "Guest" name if user is unregistered
-     * @param httpSession HTTPSession
+     *
+     * @param httpSession Http Session
      * @return user with "Guest" name or user with currrent name
      */
     private User getUser(HttpSession httpSession) {

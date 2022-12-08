@@ -17,7 +17,7 @@
 
     <title>ToDo List</title>
 </head>
-<body th:background="@{/images/bg.jpg}" th:width="1920">
+<body th:background="@{/images/bg_todo.jpg}" th:width="1920">
 
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -30,6 +30,15 @@
                 <a class="nav-item nav-link" th:href="@{/allTasks}">All tasks</a>
                 <a class="nav-item nav-link" th:href="@{/newTasks}">New Tasks</a>
                 <a class="nav-item nav-link active" href="#">Finished Tasks<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/profile}">Profile</a>
+                <a class="nav-item nav-link" th:if="${user.name == 'Guest'}" th:href="@{/loginPage}">
+                    <span th:text="${user.name}"></span>
+                    <span> | Log in</span>
+                </a>
+                <a class="nav-item nav-link" th:if="${user.name != 'Guest'}" th:href="@{/logout}">
+                    <span th:text="${user.name}"></span>
+                    <span> | Log out</span>
+                </a>
             </div>
         </div>
     </nav>
@@ -46,7 +55,9 @@
             </thead>
             <tbody>
             <tr th:each="task: ${finishedTasks}">
-                <th th:text="${task.description}"></th>
+                <th>
+                    <a th:href="@{|/formTaskDesc/${task.id}|}" th:text="${task.description}"></a>
+                </th>
             </tr>
             </tbody>
         </table>

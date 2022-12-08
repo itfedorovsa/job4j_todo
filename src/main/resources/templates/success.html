@@ -1,9 +1,9 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -18,45 +18,19 @@
     <title>ToDo List</title>
 </head>
 <body th:background="@{/images/bg_todo.jpg}" th:width="1920">
-
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" th:href="@{/index}">ToDo List</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup" opacity="3">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" th:href="@{/allTasks}">All tasks</a>
-                <a class="nav-item nav-link" th:href="@{/newTasks}">New Tasks</a>
-                <a class="nav-item nav-link" th:href="@{/finishedTasks}">Finished Tasks</a>
-                <a class="nav-item nav-link" th:href="@{/profile}">Profile</a>
-                <a class="nav-item nav-link" th:if="${user.name == 'Guest'}" th:href="@{/loginPage}">
-                    <span th:text="${user.name}"></span>
-                    <span> | Log in</span>
-                </a>
-                <a class="nav-item nav-link" th:if="${user.name != 'Guest'}" th:href="@{/logout}">
-                    <span th:text="${user.name}"></span>
-                    <span> | Log out</span>
-                </a>
-            </div>
-        </div>
     </nav>
-    <br/><br/><br/>
+    <br/>
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                New task
-            </div>
-            <div class="card-body">
-                <form th:action="@{/formAddTask}" method="POST">
-                    <input type="hidden" name="id" value="0"/>
-                    <div class="form-group">
-                        <label for="description">Enter task's description</label>
-                        <input type="text" class="form-control" name="description" id="description">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save task</button>
-                </form>
+                You are successfully signed up!
+                <a class="nav-item nav-link" th:href="@{/index}">Continue</a>
             </div>
         </div>
     </div>

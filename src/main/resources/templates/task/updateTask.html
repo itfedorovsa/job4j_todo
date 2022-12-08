@@ -18,7 +18,7 @@
 
     <title>ToDo List</title>
 </head>
-<body th:background="@{/images/bg.jpg}" th:width="1920">
+<body th:background="@{/images/bg_todo.jpg}" th:width="1920">
 
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -31,6 +31,15 @@
                 <a class="nav-item nav-link" th:href="@{/allTasks}">All tasks</a>
                 <a class="nav-item nav-link" th:href="@{/newTasks}">New Tasks</a>
                 <a class="nav-item nav-link" th:href="@{/finishedTasks}">Finished Tasks</a>
+                <a class="nav-item nav-link" th:href="@{/profile}">Profile</a>
+                <a class="nav-item nav-link" th:if="${user.name == 'Guest'}" th:href="@{/loginPage}">
+                    <span th:text="${user.name}"></span>
+                    <span> | Log in</span>
+                </a>
+                <a class="nav-item nav-link" th:if="${user.name != 'Guest'}" th:href="@{/logout}">
+                    <span th:text="${user.name}"></span>
+                    <span> | Log out</span>
+                </a>
             </div>
         </div>
     </nav>
@@ -45,11 +54,11 @@
                     <input type="hidden" name="id" th:field="*{id}"/>
                     <div class="form-group">
                         <label for="description">Enter new task's description</label>
-                        <input type="text" class="form-control" name="description" id="description">
+                        <input type="text" class="form-control" name="description" id="description"/>
                         <input type="hidden" name="created" th:field="*{created}"/>
                     </div>
                     <div class="form-check">
-                             <input type="checkbox" name="isDone" class="form-check-input" id="isDone" />
+                             <input type="checkbox" name="isDone" class="form-check-input" id="isDone"/>
                           <label class="form-check-label" for="isDone">Done</label>
                       </div>
                       <button type="submit" class="btn btn-primary">Save</button>

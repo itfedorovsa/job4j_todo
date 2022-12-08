@@ -1,5 +1,6 @@
 package ru.job4j.todo.service;
 
+import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
@@ -16,13 +17,10 @@ import java.util.Optional;
  * @since 27.11.22
  */
 @Service
+@AllArgsConstructor
 @ThreadSafe
 public class SimpleTaskService implements TaskService {
-    TaskRepository store;
-
-    public SimpleTaskService(TaskRepository store) {
-        this.store = store;
-    }
+    private final TaskRepository store;
 
     @Override
     public Optional<Task> addTask(Task task) {

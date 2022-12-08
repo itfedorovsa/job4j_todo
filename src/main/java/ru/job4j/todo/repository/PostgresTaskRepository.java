@@ -20,8 +20,8 @@ import java.util.Optional;
  * @since 27.11.22
  */
 @Repository
-@ThreadSafe
 @AllArgsConstructor
+@ThreadSafe
 public class PostgresTaskRepository implements TaskRepository {
     private final SessionFactory sf;
 
@@ -106,22 +106,22 @@ public class PostgresTaskRepository implements TaskRepository {
     @Override
     public List<Task> findNewTasks() {
         String request = "FROM Task WHERE isDone = false";
-        return findSpecifiedTasks(request);
+        return findTasksBy(request);
     }
 
     @Override
     public List<Task> findFinishedTasks() {
         String request = "FROM Task WHERE isDone = true";
-        return findSpecifiedTasks(request);
+        return findTasksBy(request);
     }
 
     /**
      * Standalone method to get a list of new or finished tasks
      *
-     * @param request sql-query with true or false "isDone" parameter
-     * @return list of new or finished tasks
+     * @param request Sql-query with true or false "isDone" attribute
+     * @return List of new or finished tasks
      */
-    private List<Task> findSpecifiedTasks(String request) {
+    private List<Task> findTasksBy(String request) {
         Session session = sf.openSession();
         List<Task> tasks = new ArrayList<>();
         try {
