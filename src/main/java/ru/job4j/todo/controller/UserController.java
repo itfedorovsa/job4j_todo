@@ -35,7 +35,6 @@ public class UserController {
     @PostMapping("/registration")
     public String registration(Model model, @ModelAttribute User user) {
         Optional<User> regUser = userService.add(user);
-        System.out.println(regUser.isEmpty());
         if (regUser.isPresent() && regUser.get().getId() == 0) {
             model.addAttribute("message", "A user with this email already exists");
             return "redirect:/fail";
@@ -105,7 +104,6 @@ public class UserController {
     @PostMapping("/login")
     public String login(@ModelAttribute User user, HttpServletRequest req) {
         Optional<User> userDb = userService.findByLogin(user.getLogin(), user.getPassword());
-        System.out.println(userDb.isEmpty());
         if (userDb.isEmpty()) {
             return "redirect:/loginPage?fail=true";
         }
@@ -149,7 +147,6 @@ public class UserController {
      */
     @GetMapping("/updateProfile/{userId}")
     public String updateProfile(Model model, HttpSession httpSession, @PathVariable("userId") int userId) {
-        //model.addAttribute("user", userService.findById(userId));
         model.addAttribute("user", getUser(httpSession));
         return "user/updateProfile";
     }

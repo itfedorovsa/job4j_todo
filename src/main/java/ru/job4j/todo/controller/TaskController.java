@@ -123,7 +123,6 @@ public class TaskController {
      */
     @PostMapping("/completeTask")
     public String completeTask(@ModelAttribute Task task) {
-        task.setDone(true);
         taskService.updateTask(task);
         return "redirect:/allTasks";
     }
@@ -147,8 +146,9 @@ public class TaskController {
      * @return all tasks page
      */
     @PostMapping("/updateTask")
-    public String updateTask(@ModelAttribute Task task) {
+    public String updateTask(@ModelAttribute Task task, @ModelAttribute("isDone") String isDone) {
         System.out.println(task);
+        task.setDone(Boolean.parseBoolean(isDone));
         taskService.updateTask(task);
         System.out.println(task);
         return "redirect:/allTasks";

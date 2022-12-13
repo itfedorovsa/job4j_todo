@@ -27,6 +27,11 @@ public class SimpleTaskService implements TaskService {
         return store.addTask(task);
     }
 
+    public void markAsDone(Task task) {
+        task.setDone(true);
+        store.updateTask(task);
+    }
+
     @Override
     public void updateTask(Task task) {
         store.updateTask(task);

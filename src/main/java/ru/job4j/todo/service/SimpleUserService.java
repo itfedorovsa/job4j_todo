@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @ThreadSafe
-public class PostgresUserService implements UserService {
+public class SimpleUserService implements UserService {
     private final UserRepository store;
 
     @Override
