@@ -123,6 +123,7 @@ public class TaskController {
      */
     @PostMapping("/completeTask")
     public String completeTask(@ModelAttribute Task task) {
+        task.setDone(true);
         taskService.updateTask(task);
         return "redirect:/allTasks";
     }

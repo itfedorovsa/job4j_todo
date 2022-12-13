@@ -36,7 +36,7 @@ public class UserController {
     public String registration(Model model, @ModelAttribute User user) {
         Optional<User> regUser = userService.add(user);
         if (regUser.isPresent() && regUser.get().getId() == 0) {
-            model.addAttribute("message", "A user with this email already exists");
+            model.addAttribute("message", "A user with this email is already exists");
             return "redirect:/fail";
         }
         return "redirect:/success";

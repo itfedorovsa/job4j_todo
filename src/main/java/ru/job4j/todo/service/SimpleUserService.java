@@ -8,6 +8,13 @@ import ru.job4j.todo.repository.UserRepository;
 
 import java.util.Optional;
 
+/**
+ * User service layer
+ *
+ * @author itfedorovsa (itfedorovsa@gmail.com)
+ * @version 1.0
+ * @since 27.11.22
+ */
 @Service
 @AllArgsConstructor
 @ThreadSafe
