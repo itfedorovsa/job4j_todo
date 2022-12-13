@@ -2,14 +2,14 @@ package ru.job4j.todo.service;
 
 import ru.job4j.todo.model.User;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
- *  User service interface
- *  @author itfedorovsa (itfedorovsa@gmail.com)
- *  @since 06.12.22
- *  @version 1.0
+ * User service interface
+ *
+ * @author itfedorovsa (itfedorovsa@gmail.com)
+ * @version 1.0
+ * @since 06.12.22
  */
 public interface UserService {
 
@@ -17,10 +17,6 @@ public interface UserService {
 
     void update(User user);
 
-    List<User> findAll();
-
-    Optional<User> findById(Integer id);
-
-    Optional<User> findByLogin(String login, String password);
+    Optional<User> findByLoginAndPassword(String login, String password);
 
 }

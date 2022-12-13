@@ -22,7 +22,7 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 @ThreadSafe
-public class PostgresTaskRepository implements TaskRepository {
+public class HibernateTaskRepository implements TaskRepository {
     private final SessionFactory sf;
 
     @Override
