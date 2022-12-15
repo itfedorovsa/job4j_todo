@@ -27,9 +27,10 @@ public class SimpleTaskService implements TaskService {
         return store.addTask(task);
     }
 
+    @Override
     public void markAsDone(Task task) {
         task.setDone(true);
-        store.updateTask(task);
+        store.markAsDone(task);
     }
 
     @Override
@@ -48,8 +49,8 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public List<Task> findAllTasks() {
-        return store.findAllTasks();
+    public List<Task> findAllTasks(Integer id) {
+        return store.findAllTasks(id);
     }
 
     @Override

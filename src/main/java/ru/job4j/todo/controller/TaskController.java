@@ -37,7 +37,7 @@ public class TaskController {
      */
     @GetMapping("/allTasks")
     public String allTasks(Model model, HttpSession httpSession) {
-        model.addAttribute("allTasks", taskService.findAllTasks());
+        model.addAttribute("allTasks", taskService.findAllTasks(getUser(httpSession).getId()));
         model.addAttribute("user", getUser(httpSession));
         return "task/allTasks";
     }
@@ -90,7 +90,8 @@ public class TaskController {
      * @return all tasks page
      */
     @PostMapping("/formAddTask")
-    public String formAddTask(@ModelAttribute Task task) {
+    public String formAddTask(@ModelAttribute Task task, HttpSession httpSession) {
+        task.setUser(getUser(httpSession));
         task.setDone(false);
         taskService.addTask(task);
         return "redirect:/allTasks";
@@ -122,9 +123,9 @@ public class TaskController {
      * @return all tasks page
      */
     @PostMapping("/completeTask")
-    public String completeTask(@ModelAttribute Task task) {
-        task.setDone(true);
-        taskService.updateTask(task);
+    public String completeTask(@ModelAttribute Task task, HttpSession httpSession) {
+        task.setUser(getUser(httpSession));
+        taskService.markAsDone(task);
         return "redirect:/allTasks";
     }
 
@@ -147,11 +148,10 @@ public class TaskController {
      * @return all tasks page
      */
     @PostMapping("/updateTask")
-    public String updateTask(@ModelAttribute Task task, @ModelAttribute("isDone") String isDone) {
-        System.out.println(task);
+    public String updateTask(@ModelAttribute Task task, @ModelAttribute("isDone") String isDone, HttpSession httpSession) {
+        task.setUser(getUser(httpSession));
         task.setDone(Boolean.parseBoolean(isDone));
         taskService.updateTask(task);
-        System.out.println(task);
         return "redirect:/allTasks";
     }
 

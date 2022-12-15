@@ -35,6 +35,16 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
+     * Mark the task completed in DB
+     *
+     * @param task Task
+     */
+    @Override
+    public void markAsDone(Task task) {
+        updateTask(task);
+    }
+
+    /**
      * Update task in DB
      *
      * @param task Task
@@ -60,8 +70,11 @@ public class HibernateTaskRepository implements TaskRepository {
      * @return List with all tasks
      */
     @Override
-    public List<Task> findAllTasks() {
-        return crudRepository.query("FROM Task", Task.class);
+    public List<Task> findAllTasks(Integer id) {
+        return crudRepository.query(
+                "FROM Task WHERE user_id = :uId ORDER BY description ASC",
+                Task.class,
+                Map.of("uId", id));
     }
 
     /**
@@ -82,7 +95,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public List<Task> findNewTasks() {
-        return crudRepository.query("FROM Task WHERE isDone = false", Task.class);
+        return crudRepository.query("FROM Task WHERE isDone = false ORDER BY description ASC", Task.class);
     }
 
     /**
@@ -92,7 +105,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public List<Task> findFinishedTasks() {
-        return crudRepository.query("FROM Task WHERE isDone = true", Task.class);
+        return crudRepository.query("FROM Task WHERE isDone = true ORDER BY description ASC", Task.class);
     }
 
 }

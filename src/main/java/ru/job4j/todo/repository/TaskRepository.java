@@ -16,13 +16,15 @@ public interface TaskRepository {
 
     Optional<Task> addTask(Task task);
 
+    void markAsDone(Task task);
+
     void updateTask(Task task);
 
     void deleteTask(Task task);
 
     Optional<Task> findTaskById(Integer id);
 
-    List<Task> findAllTasks();
+    List<Task> findAllTasks(Integer id);
 
     List<Task> findNewTasks();
 

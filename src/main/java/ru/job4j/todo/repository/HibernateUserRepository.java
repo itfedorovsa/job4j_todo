@@ -52,14 +52,14 @@ public class HibernateUserRepository implements UserRepository {
      */
     @Override
     public Optional<User> findByLoginAndPassword(String login, String password) {
-        Optional<User> user;
+        Optional<User> user = Optional.empty();
         try {
             user = crudRepository.optional(
                     "FROM User WHERE login = :uLogin AND password = :uPass",
                     User.class,
                     Map.of("uLogin", login, "uPass", password));
         } catch (IllegalStateException e) {
-            user = Optional.empty();
+            e.printStackTrace();
         }
         return user;
     }
