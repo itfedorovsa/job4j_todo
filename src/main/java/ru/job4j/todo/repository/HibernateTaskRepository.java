@@ -35,16 +35,6 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
-     * Mark the task completed in DB
-     *
-     * @param task Task
-     */
-    @Override
-    public void markAsDone(Task task) {
-        updateTask(task);
-    }
-
-    /**
      * Update task in DB
      *
      * @param task Task
@@ -67,47 +57,53 @@ public class HibernateTaskRepository implements TaskRepository {
     /**
      * Find all tasks
      *
+     * @param userId User id
      * @return List with all tasks
      */
     @Override
-    public List<Task> findAllTasks(Integer id) {
+    public List<Task> findAllTasks(int userId) {
         return crudRepository.query(
                 "FROM Task WHERE user_id = :uId ORDER BY description ASC",
                 Task.class,
-                Map.of("uId", id));
+                Map.of("uId", userId));
     }
 
     /**
      * Find task by id
      *
-     * @param id Id
+     * @param taskId Task id
      * @return Optional of found task
      */
     @Override
-    public Optional<Task> findTaskById(Integer id) {
-        return crudRepository.optional("FROM Task WHERE id = :uId", Task.class, Map.of("uId", id));
+    public Optional<Task> findTaskById(int taskId) {
+        return crudRepository.optional("FROM Task WHERE id = :uId",
+                Task.class,
+                Map.of("uId", taskId));
     }
 
     /**
      * Find new tasks
      *
+     * @param userId User id
      * @return List of new tasks
      */
     @Override
-    public List<Task> findNewTasks() {
-        return crudRepository.query("FROM Task WHERE isDone = false ORDER BY description ASC", Task.class);
+    public List<Task> findNewTasks(int userId) {
+        return crudRepository.query("FROM Task WHERE isDone = false AND user_id = :uId ORDER BY description ASC",
+                Task.class,
+                Map.of("uId", userId));
     }
 
     /**
      * Find finished tasks
-     *
+     * @param userId User id
      * @return List of finished tasks
      */
     @Override
-    public List<Task> findFinishedTasks() {
-        return crudRepository.query("FROM Task WHERE isDone = true ORDER BY description ASC", Task.class);
+    public List<Task> findFinishedTasks(int userId) {
+        return crudRepository.query("FROM Task WHERE isDone = true AND user_id = :uId ORDER BY description ASC",
+                Task.class,
+                Map.of("uId", userId));
     }
 
 }
-
-

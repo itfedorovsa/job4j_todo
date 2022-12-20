@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.util.List;
@@ -23,18 +24,22 @@ public class SimpleTaskService implements TaskService {
     private final TaskRepository store;
 
     @Override
-    public Optional<Task> addTask(Task task) {
+    public Optional<Task> addTask(User user, Task task) {
+        task.setUser(user);
         return store.addTask(task);
     }
 
     @Override
-    public void markAsDone(Task task) {
+    public void markAsDone(User user, Task task) {
+        task.setUser(user);
         task.setDone(true);
-        store.markAsDone(task);
+        store.updateTask(task);
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(User user, boolean isDone, Task task) {
+        task.setDone(isDone);
+        task.setUser(user);
         store.updateTask(task);
     }
 
@@ -44,23 +49,23 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Optional<Task> findTaskById(Integer id) {
-        return store.findTaskById(id);
+    public Optional<Task> findTaskById(int taskId) {
+        return store.findTaskById(taskId);
     }
 
     @Override
-    public List<Task> findAllTasks(Integer id) {
-        return store.findAllTasks(id);
+    public List<Task> findAllTasks(int userId) {
+        return store.findAllTasks(userId);
     }
 
     @Override
-    public List<Task> findNewTasks() {
-        return store.findNewTasks();
+    public List<Task> findNewTasks(int userId) {
+        return store.findNewTasks(userId);
     }
 
     @Override
-    public List<Task> findFinishedTasks() {
-        return store.findFinishedTasks();
+    public List<Task> findFinishedTasks(int userId) {
+        return store.findFinishedTasks(userId);
     }
 
 }

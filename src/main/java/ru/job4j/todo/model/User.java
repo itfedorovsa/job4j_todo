@@ -23,7 +23,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Include
-    private Integer id;
+    private int id;
     private String name;
     private String login;
     private String password;

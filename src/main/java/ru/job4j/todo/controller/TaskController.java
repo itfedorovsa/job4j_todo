@@ -32,13 +32,14 @@ public class TaskController {
      * All tasks page
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HTTP Session
      * @return allTasks.html - all tasks from list
      */
     @GetMapping("/allTasks")
     public String allTasks(Model model, HttpSession httpSession) {
-        model.addAttribute("allTasks", taskService.findAllTasks(getUser(httpSession).getId()));
-        model.addAttribute("user", getUser(httpSession));
+        User user = getUser(httpSession);
+        model.addAttribute("allTasks", taskService.findAllTasks(user.getId()));
+        model.addAttribute("user", user);
         return "task/allTasks";
     }
 
@@ -46,13 +47,14 @@ public class TaskController {
      * New tasks page
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HTTP Session
      * @return newTasks.html - new (opened) tasks from list
      */
     @GetMapping("/newTasks")
     public String newTasks(Model model, HttpSession httpSession) {
-        model.addAttribute("newTasks", taskService.findNewTasks());
-        model.addAttribute("user", getUser(httpSession));
+        User user = getUser(httpSession);
+        model.addAttribute("newTasks", taskService.findNewTasks(user.getId()));
+        model.addAttribute("user", user);
         return "task/newTasks";
     }
 
@@ -60,13 +62,14 @@ public class TaskController {
      * Finished tasks page
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HTTP Session
      * @return finishedTasks.html - finished (closed) tasks from list
      */
     @GetMapping("/finishedTasks")
     public String finishedTasks(Model model, HttpSession httpSession) {
-        model.addAttribute("finishedTasks", taskService.findFinishedTasks());
-        model.addAttribute("user", getUser(httpSession));
+        User user = getUser(httpSession);
+        model.addAttribute("finishedTasks", taskService.findFinishedTasks(user.getId()));
+        model.addAttribute("user", user);
         return "task/finishedTasks";
     }
 
@@ -74,7 +77,7 @@ public class TaskController {
      * New task creating page
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HTTP Session
      * @return newTask.html - new task creating page
      */
     @GetMapping("/newTask")
@@ -83,29 +86,33 @@ public class TaskController {
         return "task/newTask";
     }
 
+
     /**
      * Post method for adding a task
      *
-     * @param task "task" attribute in model
-     * @return all tasks page
+     * @param task        "task" attribute in model
+     * @param httpSession HTTP Session
+     * @return All tasks page
      */
     @PostMapping("/formAddTask")
     public String formAddTask(@ModelAttribute Task task, HttpSession httpSession) {
-        task.setUser(getUser(httpSession));
         task.setDone(false);
-        taskService.addTask(task);
+        taskService.addTask(getUser(httpSession), task);
         return "redirect:/allTasks";
     }
 
     /**
      * Page of task's description
      *
-     * @param model Model
-     * @param id    Current task id
+     * @param model       Model
+     * @param id          Current task id
+     * @param httpSession HTTP Session
      * @return taskDesc.html - page with task's description
      */
     @GetMapping("/formTaskDesc/{taskId}")
-    public String formTaskDesc(Model model, @PathVariable("taskId") int id, HttpSession httpSession) {
+    public String formTaskDesc(Model model,
+                               @PathVariable("taskId") int id,
+                               HttpSession httpSession) {
         Optional<Task> taskById = taskService.findTaskById(id);
         Task taskObj = new Task();
         if (taskById.isPresent()) {
@@ -119,13 +126,13 @@ public class TaskController {
     /**
      * Post method for marking task as done
      *
-     * @param task "task" attribute in model
-     * @return all tasks page
+     * @param task        "task" attribute in model
+     * @param httpSession HTTP Session
+     * @return All tasks page
      */
     @PostMapping("/completeTask")
     public String completeTask(@ModelAttribute Task task, HttpSession httpSession) {
-        task.setUser(getUser(httpSession));
-        taskService.markAsDone(task);
+        taskService.markAsDone(getUser(httpSession), task);
         return "redirect:/allTasks";
     }
 
@@ -133,7 +140,7 @@ public class TaskController {
      * Post method for deleting task
      *
      * @param task "task" attribute in model
-     * @return all tasks page
+     * @return All tasks page
      */
     @PostMapping("/deleteTask")
     public String deleteTask(@ModelAttribute Task task) {
@@ -144,26 +151,31 @@ public class TaskController {
     /**
      * Post method for updating task
      *
-     * @param task "task" attribute in model
-     * @return all tasks page
+     * @param task        "task" attribute in model
+     * @param isDone      Task's "isDone" field value
+     * @param httpSession HTTP Session
+     * @return All tasks page
      */
     @PostMapping("/updateTask")
-    public String updateTask(@ModelAttribute Task task, @ModelAttribute("isDone") String isDone, HttpSession httpSession) {
-        task.setUser(getUser(httpSession));
-        task.setDone(Boolean.parseBoolean(isDone));
-        taskService.updateTask(task);
+    public String updateTask(@ModelAttribute Task task,
+                             @ModelAttribute("isDone") String isDone,
+                             HttpSession httpSession) {
+        taskService.updateTask(getUser(httpSession), Boolean.parseBoolean(isDone), task);
         return "redirect:/allTasks";
     }
 
     /**
      * Page of task's description
      *
-     * @param model Model
-     * @param id    Current task id
+     * @param model       Model
+     * @param id          Current task id
+     * @param httpSession HTTP Session
      * @return updateTask.html - task updating page
      */
     @GetMapping("/formUpdateTask/{taskId}")
-    public String formUpdateTask(Model model, @PathVariable("taskId") int id, HttpSession httpSession) {
+    public String formUpdateTask(Model model,
+                                 @PathVariable("taskId") int id,
+                                 HttpSession httpSession) {
         Optional<Task> taskById = taskService.findTaskById(id);
         Task taskObj = new Task();
         if (taskById.isPresent()) {
@@ -178,7 +190,7 @@ public class TaskController {
      * Gives "Guest" name if user is unregistered
      *
      * @param httpSession HTTPSession
-     * @return user with "Guest" name or user with currrent name
+     * @return User with "Guest" name or user with currrent name
      */
     private User getUser(HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");

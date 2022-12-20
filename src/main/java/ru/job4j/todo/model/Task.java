@@ -24,7 +24,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Include
-    private Integer id;
+    private int id;
     private String description;
     private LocalDateTime created = LocalDateTime.now();
     private boolean isDone;
