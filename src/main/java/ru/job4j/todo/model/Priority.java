@@ -7,17 +7,17 @@ import lombok.EqualsAndHashCode.Include;
 import javax.persistence.*;
 
 /**
- * User model
+ * Task priority model
  *
  * @author itfedorovsa (itfedorovsa@gmail.com)
  * @version 1.0
- * @since 06.12.22
+ * @since 20.12.22
  */
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "priorities")
+public class Priority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,5 @@ public class User {
 
     private String name;
 
-    private String login;
-
-    private String password;
-
+    private int position;
 }

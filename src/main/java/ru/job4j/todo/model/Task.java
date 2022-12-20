@@ -25,9 +25,13 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Include
     private int id;
+
     private String description;
+
     private LocalDateTime created = LocalDateTime.now();
+
     private boolean isDone;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -35,5 +39,9 @@ public class Task {
     public boolean getIsDone() {
         return isDone;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "priority_id")
+    private Priority priority;
 
 }
