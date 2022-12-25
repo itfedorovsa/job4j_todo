@@ -1,7 +1,7 @@
 package ru.job4j.todo.repository;
 
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,5 +28,7 @@ public interface TaskRepository {
     List<Task> findNewTasks(int userId);
 
     List<Task> findFinishedTasks(int userId);
+
+    List<Priority> findAllPriorities();
 
 }

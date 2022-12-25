@@ -3,6 +3,7 @@ package ru.job4j.todo.service;
 import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.TaskRepository;
@@ -33,13 +34,15 @@ public class SimpleTaskService implements TaskService {
     public void markAsDone(User user, Task task) {
         task.setUser(user);
         task.setDone(true);
+        //task.setPriority(1);
         store.updateTask(task);
     }
 
     @Override
     public void updateTask(User user, boolean isDone, Task task) {
-        task.setDone(isDone);
         task.setUser(user);
+        task.setDone(isDone);
+
         store.updateTask(task);
     }
 
@@ -68,5 +71,9 @@ public class SimpleTaskService implements TaskService {
         return store.findFinishedTasks(userId);
     }
 
+    @Override
+    public List<Priority> findAllPriorities() {
+        return store.findAllPriorities();
+    }
 }
 

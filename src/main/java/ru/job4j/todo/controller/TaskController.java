@@ -83,6 +83,7 @@ public class TaskController {
     @GetMapping("/newTask")
     public String newTask(Model model, HttpSession httpSession) {
         model.addAttribute("user", getUser(httpSession));
+        model.addAttribute("priorities", taskService.findAllPriorities());
         return "task/newTask";
     }
 
@@ -127,11 +128,18 @@ public class TaskController {
      * Post method for marking task as done
      *
      * @param task        "task" attribute in model
-     * @param httpSession HTTP Session
+     * @param httpSession HTTP Sessiond
      * @return All tasks page
      */
     @PostMapping("/completeTask")
     public String completeTask(@ModelAttribute Task task, HttpSession httpSession) {
+        Optional<Task> taskById = taskService.findTaskById(task.getId());
+        Task taskObj = new Task();
+        if (taskById.isPresent()) {
+            taskObj = taskById.get();
+        }
+        task.setPriority(taskObj.getPriority());
+        System.out.println(task);
         taskService.markAsDone(getUser(httpSession), task);
         return "redirect:/allTasks";
     }
@@ -145,22 +153,6 @@ public class TaskController {
     @PostMapping("/deleteTask")
     public String deleteTask(@ModelAttribute Task task) {
         taskService.deleteTask(task);
-        return "redirect:/allTasks";
-    }
-
-    /**
-     * Post method for updating task
-     *
-     * @param task        "task" attribute in model
-     * @param isDone      Task's "isDone" field value
-     * @param httpSession HTTP Session
-     * @return All tasks page
-     */
-    @PostMapping("/updateTask")
-    public String updateTask(@ModelAttribute Task task,
-                             @ModelAttribute("isDone") String isDone,
-                             HttpSession httpSession) {
-        taskService.updateTask(getUser(httpSession), Boolean.parseBoolean(isDone), task);
         return "redirect:/allTasks";
     }
 
@@ -183,7 +175,24 @@ public class TaskController {
         }
         model.addAttribute("task", taskObj);
         model.addAttribute("user", getUser(httpSession));
+        model.addAttribute("priorities", taskService.findAllPriorities());
         return "task/updateTask";
+    }
+
+    /**
+     * Post method for updating task
+     *
+     * @param task        "task" attribute in model
+     * @param isDone      Task's "isDone" field value
+     * @param httpSession HTTP Session
+     * @return All tasks page
+     */
+    @PostMapping("/updateTask")
+    public String updateTask(@ModelAttribute Task task,
+                             @ModelAttribute("isDone") String isDone,
+                             HttpSession httpSession) {
+        taskService.updateTask(getUser(httpSession), Boolean.parseBoolean(isDone), task);
+        return "redirect:/allTasks";
     }
 
     /**

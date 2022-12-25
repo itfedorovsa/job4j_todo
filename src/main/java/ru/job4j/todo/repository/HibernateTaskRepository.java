@@ -3,6 +3,7 @@ package ru.job4j.todo.repository;
 import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public List<Task> findAllTasks(int userId) {
         return crudRepository.query(
-                "FROM Task WHERE user_id = :uId ORDER BY description ASC",
+                "FROM Task t JOIN FETCH t.priority WHERE user_id = :uId ORDER BY description ASC",
                 Task.class,
                 Map.of("uId", userId));
     }
@@ -76,7 +77,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public Optional<Task> findTaskById(int taskId) {
-        return crudRepository.optional("FROM Task WHERE id = :uId",
+        return crudRepository.optional("FROM Task t JOIN FETCH t.priority WHERE t.id = :uId",
                 Task.class,
                 Map.of("uId", taskId));
     }
@@ -89,21 +90,33 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public List<Task> findNewTasks(int userId) {
-        return crudRepository.query("FROM Task WHERE isDone = false AND user_id = :uId ORDER BY description ASC",
+        return crudRepository.query("FROM Task t JOIN FETCH t.priority WHERE isDone = false AND user_id = :uId ORDER BY description ASC",
                 Task.class,
                 Map.of("uId", userId));
     }
 
     /**
      * Find finished tasks
+     *
      * @param userId User id
      * @return List of finished tasks
      */
     @Override
     public List<Task> findFinishedTasks(int userId) {
-        return crudRepository.query("FROM Task WHERE isDone = true AND user_id = :uId ORDER BY description ASC",
+        return crudRepository.query("FROM Task t JOIN FETCH t.priority WHERE isDone = true AND user_id = :uId ORDER BY description ASC",
                 Task.class,
                 Map.of("uId", userId));
     }
 
+    /**
+     * Find all priorities
+     *
+     * @return List of all priorities
+     */
+    @Override
+    public List<Priority> findAllPriorities() {
+        return crudRepository.query(
+                "FROM Priority",
+                Priority.class);
+    }
 }
