@@ -57,6 +57,7 @@
                 <th scope="col">Task description</th>
                 <th scope="col">Task priority</th>
                 <th scope="col">User</th>
+                <th scope="col">Task category</th>
             </tr>
             </thead>
             <tbody>
@@ -69,6 +70,11 @@
                 </th>
                 <th>
                     <span th:text="${task.user.name}"></span>
+                </th>
+                <th>
+                    <a th:each="category: ${task.categories}">
+                        <span th:utext="${category.name + '<br>'}"></span>
+                    </a>
                 </th>
             </tr>
             </tbody>

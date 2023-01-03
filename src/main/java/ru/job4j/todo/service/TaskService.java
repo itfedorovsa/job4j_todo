@@ -1,5 +1,6 @@
 package ru.job4j.todo.service;
 
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
@@ -18,7 +19,7 @@ public interface TaskService {
 
     Optional<Task> addTask(User user, Task task);
 
-    void markAsDone(User user, Task task);
+    void markAsDone(User user, Task task, Priority priority, List<Category> categories);
 
     void updateTask(User user, boolean isDone, Task task);
 
@@ -31,7 +32,5 @@ public interface TaskService {
     List<Task> findNewTasks(int userId);
 
     List<Task> findFinishedTasks(int userId);
-
-    List<Priority> findAllPriorities();
 
 }

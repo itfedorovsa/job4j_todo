@@ -68,9 +68,16 @@
                     </div>
                     <div class="form-group">
                         <label for="priority.id">Set new priority</label>
-                        <select class="form-control" id="priority.id" name="priority.id">
+                        <select class="form-control" id="priority.id" name="priority.id" >
                             <option th:each="priority : ${priorities}" th:value="${priority.id}"
-                                    th:text="${priority.name}"></option>
+                                    th:text="${priority.name}" th:selected="${priority == task.priority}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category.id">Set new category</label>
+                        <select class="form-control" id="category.id" name="categoriesIds" size="3" multiple="multiple" required>
+                            <option th:each="category: ${categories}" th:value="${category.id}"
+                                    th:text="${category.name}" th:selected="${task.categories.contains(category)}"></option>
                         </select>
                     </div>
                     <br/><br/>

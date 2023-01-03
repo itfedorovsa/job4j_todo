@@ -7,17 +7,17 @@ import lombok.EqualsAndHashCode.Include;
 import javax.persistence.*;
 
 /**
- * Task priority model
+ * Task category model
  *
  * @author itfedorovsa (itfedorovsa@gmail.com)
  * @version 1.0
- * @since 20.12.22
+ * @since 25.12.22
  */
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "priorities")
-public class Priority {
+@Table(name = "categories")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,5 @@ public class Priority {
     private int id;
 
     private String name;
-
-    private int position;
 
 }

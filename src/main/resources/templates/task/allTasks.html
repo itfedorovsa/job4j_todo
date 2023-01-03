@@ -59,11 +59,11 @@
                 <th scope="col">Task priority</th>
                 <th scope="col">Done</th>
                 <th scope="col">User</th>
-
+                <th scope="col">Task category</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="task: ${allTasks}">
+            <a th:each="task: ${allTasks}">
                 <th>
                     <a th:href="@{|/formTaskDesc/${task.id}|}" th:text="${task.description}"></a>
                 </th>
@@ -81,7 +81,13 @@
                 <th>
                     <span th:text="${task.user.name}"></span>
                 </th>
-            </tr>
+                <th>
+                    <a th:each="category: ${task.categories}">
+                        <span th:utext="${category.name + '<br>'}"></span>
+                    </a>
+                </th>
+                </tr>
+            </a>
             </tbody>
         </table>
     </div>

@@ -4,16 +4,18 @@ import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.model.Category;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Task Controller
@@ -27,6 +29,8 @@ import java.util.Optional;
 @ThreadSafe
 public class TaskController {
     private final TaskService taskService;
+    private final PriorityService priorityService;
+    private final CategoryService categoryService;
 
     /**
      * All tasks page
@@ -39,6 +43,7 @@ public class TaskController {
     public String allTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
         model.addAttribute("allTasks", taskService.findAllTasks(user.getId()));
+        model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
         model.addAttribute("user", user);
         return "task/allTasks";
     }
@@ -54,6 +59,7 @@ public class TaskController {
     public String newTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
         model.addAttribute("newTasks", taskService.findNewTasks(user.getId()));
+        model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
         model.addAttribute("user", user);
         return "task/newTasks";
     }
@@ -69,6 +75,7 @@ public class TaskController {
     public String finishedTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
         model.addAttribute("finishedTasks", taskService.findFinishedTasks(user.getId()));
+        model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
         model.addAttribute("user", user);
         return "task/finishedTasks";
     }
@@ -83,7 +90,8 @@ public class TaskController {
     @GetMapping("/newTask")
     public String newTask(Model model, HttpSession httpSession) {
         model.addAttribute("user", getUser(httpSession));
-        model.addAttribute("priorities", taskService.findAllPriorities());
+        model.addAttribute("priorities", priorityService.findAllPriorities());
+        model.addAttribute("categories", categoryService.findAllCategories());
         return "task/newTask";
     }
 
@@ -95,9 +103,16 @@ public class TaskController {
      * @param httpSession HTTP Session
      * @return All tasks page
      */
-    @PostMapping("/formAddTask")
-    public String formAddTask(@ModelAttribute Task task, HttpSession httpSession) {
-        task.setDone(false);
+    @PostMapping("/createTask")
+    public String createTask(@ModelAttribute Task task,
+                             @RequestParam("priority.id") int priorityId,
+                             @RequestParam List<Integer> categoriesIds,
+                             HttpSession httpSession) {
+        Priority priorityById = priorityService.getPriorityById(priorityId)
+                .orElseThrow(() -> new NoSuchElementException("Priority with id " + priorityId + " is missing."));
+        task.setPriority(priorityById);
+        List<Category> categories = categoryService.findCategoriesByIds(categoriesIds);
+        task.setCategories(categories);
         taskService.addTask(getUser(httpSession), task);
         return "redirect:/allTasks";
     }
@@ -114,12 +129,9 @@ public class TaskController {
     public String formTaskDesc(Model model,
                                @PathVariable("taskId") int id,
                                HttpSession httpSession) {
-        Optional<Task> taskById = taskService.findTaskById(id);
-        Task taskObj = new Task();
-        if (taskById.isPresent()) {
-            taskObj = taskById.get();
-        }
-        model.addAttribute("task", taskObj);
+        Task taskById = taskService.findTaskById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task with id " + id + " is missing."));
+        model.addAttribute("task", taskById);
         model.addAttribute("user", getUser(httpSession));
         return "task/taskDesc";
     }
@@ -133,14 +145,12 @@ public class TaskController {
      */
     @PostMapping("/completeTask")
     public String completeTask(@ModelAttribute Task task, HttpSession httpSession) {
-        Optional<Task> taskById = taskService.findTaskById(task.getId());
-        Task taskObj = new Task();
-        if (taskById.isPresent()) {
-            taskObj = taskById.get();
-        }
-        task.setPriority(taskObj.getPriority());
-        System.out.println(task);
-        taskService.markAsDone(getUser(httpSession), task);
+        int taskId = task.getId();
+        Task taskById = taskService.findTaskById(taskId)
+                .orElseThrow(() -> new NoSuchElementException("Task with id " + taskId + " is missing."));
+        Priority priority = taskById.getPriority();
+        List<Category> categories = taskById.getCategories();
+        taskService.markAsDone(getUser(httpSession), task, priority, categories);
         return "redirect:/allTasks";
     }
 
@@ -168,14 +178,12 @@ public class TaskController {
     public String formUpdateTask(Model model,
                                  @PathVariable("taskId") int id,
                                  HttpSession httpSession) {
-        Optional<Task> taskById = taskService.findTaskById(id);
-        Task taskObj = new Task();
-        if (taskById.isPresent()) {
-            taskObj = taskById.get();
-        }
-        model.addAttribute("task", taskObj);
+        Task taskById = taskService.findTaskById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task with id " + id + " is missing."));
+        model.addAttribute("task", taskById);
         model.addAttribute("user", getUser(httpSession));
-        model.addAttribute("priorities", taskService.findAllPriorities());
+        model.addAttribute("priorities", priorityService.findAllPriorities());
+        model.addAttribute("categories", categoryService.findAllCategories());
         return "task/updateTask";
     }
 
@@ -190,7 +198,14 @@ public class TaskController {
     @PostMapping("/updateTask")
     public String updateTask(@ModelAttribute Task task,
                              @ModelAttribute("isDone") String isDone,
+                             @RequestParam("priority.id") int priorityId,
+                             @RequestParam List<Integer> categoriesIds,
                              HttpSession httpSession) {
+        Priority priorityById = priorityService.getPriorityById(priorityId)
+                .orElseThrow(() -> new NoSuchElementException("Priority with id " + priorityId + " is missing."));
+        task.setPriority(priorityById);
+        List<Category> categories = categoryService.findCategoriesByIds(categoriesIds);
+        task.setCategories(categories);
         taskService.updateTask(getUser(httpSession), Boolean.parseBoolean(isDone), task);
         return "redirect:/allTasks";
     }

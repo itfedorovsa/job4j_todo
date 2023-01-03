@@ -3,7 +3,6 @@ package ru.job4j.todo.repository;
 import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
-import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 
 import java.util.List;
@@ -22,6 +21,26 @@ import java.util.Optional;
 @ThreadSafe
 public class HibernateTaskRepository implements TaskRepository {
     private final CrudRepository crudRepository;
+
+    private static final String FIND_ALL_TASKS = """
+            SELECT DISTINCT t FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories
+            WHERE user_id = :uId ORDER BY description ASC
+            """;
+
+    private static final String FIND_TASK_BY_ID = """
+            SELECT DISTINCT t FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories
+            WHERE t.id = :uId
+            """;
+
+    private static final String FIND_NEW_TASKS = """
+            SELECT DISTINCT t FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories
+            WHERE isDone = false AND user_id = :uId ORDER BY description ASC
+            """;
+
+    private static final String FIND_FINISHED_TASKS = """
+            SELECT DISTINCT t FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories
+            WHERE isDone = true AND user_id = :uId ORDER BY description ASC
+            """;
 
     /**
      * Save task in DB
@@ -63,10 +82,9 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public List<Task> findAllTasks(int userId) {
-        return crudRepository.query(
-                "FROM Task t JOIN FETCH t.priority WHERE user_id = :uId ORDER BY description ASC",
-                Task.class,
-                Map.of("uId", userId));
+        List<Task> uId = crudRepository.query(FIND_ALL_TASKS, Task.class, Map.of("uId", userId));
+        System.out.println(uId + "Hhhh");
+        return uId;
     }
 
     /**
@@ -77,9 +95,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public Optional<Task> findTaskById(int taskId) {
-        return crudRepository.optional("FROM Task t JOIN FETCH t.priority WHERE t.id = :uId",
-                Task.class,
-                Map.of("uId", taskId));
+        return crudRepository.optional(FIND_TASK_BY_ID, Task.class, Map.of("uId", taskId));
     }
 
     /**
@@ -90,9 +106,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public List<Task> findNewTasks(int userId) {
-        return crudRepository.query("FROM Task t JOIN FETCH t.priority WHERE isDone = false AND user_id = :uId ORDER BY description ASC",
-                Task.class,
-                Map.of("uId", userId));
+        return crudRepository.query(FIND_NEW_TASKS, Task.class, Map.of("uId", userId));
     }
 
     /**
@@ -103,20 +117,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public List<Task> findFinishedTasks(int userId) {
-        return crudRepository.query("FROM Task t JOIN FETCH t.priority WHERE isDone = true AND user_id = :uId ORDER BY description ASC",
-                Task.class,
-                Map.of("uId", userId));
+        return crudRepository.query(FIND_FINISHED_TASKS, Task.class, Map.of("uId", userId));
     }
 
-    /**
-     * Find all priorities
-     *
-     * @return List of all priorities
-     */
-    @Override
-    public List<Priority> findAllPriorities() {
-        return crudRepository.query(
-                "FROM Priority",
-                Priority.class);
-    }
 }
