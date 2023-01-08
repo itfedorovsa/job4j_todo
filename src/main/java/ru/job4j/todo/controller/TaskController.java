@@ -14,7 +14,11 @@ import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -42,8 +46,10 @@ public class TaskController {
     @GetMapping("/allTasks")
     public String allTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
-        model.addAttribute("allTasks", taskService.findAllTasks(user.getId()));
+        List<Task> allTasks = taskService.findAllTasks(user.getId());
+        model.addAttribute("allTasks", allTasks);
         model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
+        model.addAttribute("formattedDatesTimes", getFormattedDatesTimes(user, allTasks));
         model.addAttribute("user", user);
         return "task/allTasks";
     }
@@ -58,8 +64,10 @@ public class TaskController {
     @GetMapping("/newTasks")
     public String newTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
-        model.addAttribute("newTasks", taskService.findNewTasks(user.getId()));
+        List<Task> newTasks = taskService.findNewTasks(user.getId());
+        model.addAttribute("newTasks", newTasks);
         model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
+        model.addAttribute("formattedDatesTimes", getFormattedDatesTimes(user, newTasks));
         model.addAttribute("user", user);
         return "task/newTasks";
     }
@@ -74,8 +82,10 @@ public class TaskController {
     @GetMapping("/finishedTasks")
     public String finishedTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
-        model.addAttribute("finishedTasks", taskService.findFinishedTasks(user.getId()));
+        List<Task> finishedTasks = taskService.findFinishedTasks(user.getId());
+        model.addAttribute("finishedTasks", finishedTasks);
         model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
+        model.addAttribute("formattedDatesTimes", getFormattedDatesTimes(user, finishedTasks));
         model.addAttribute("user", user);
         return "task/finishedTasks";
     }
@@ -108,6 +118,7 @@ public class TaskController {
                              @RequestParam("priority.id") int priorityId,
                              @RequestParam List<Integer> categoriesIds,
                              HttpSession httpSession) {
+
         Priority priorityById = priorityService.getPriorityById(priorityId)
                 .orElseThrow(() -> new NoSuchElementException("Priority with id " + priorityId + " is missing."));
         task.setPriority(priorityById);
@@ -223,6 +234,24 @@ public class TaskController {
             user.setName("Guest");
         }
         return user;
+    }
+
+    /**
+     * Map of formatted dates and times on user's timezone
+     *
+     * @param user  Current User
+     * @param tasks List of all, new or finished tasks
+     * @return Map of formatted dates and times based on user's timezone
+     */
+    private Map<Integer, String> getFormattedDatesTimes(User user, List<Task> tasks) {
+        Map<Integer, String> formattedDatesTimes = new HashMap<>();
+        for (Task task : tasks) {
+            String time = task.getCreated().atZone(
+                    ZoneId.of(user.getTimezone())
+            ).format(DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd"));
+            formattedDatesTimes.put(task.getId(), time);
+        }
+        return formattedDatesTimes;
     }
 
 }

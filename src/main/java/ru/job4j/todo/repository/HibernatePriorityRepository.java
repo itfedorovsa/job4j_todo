@@ -22,6 +22,10 @@ import java.util.Optional;
 public class HibernatePriorityRepository implements PriorityRepository {
     private final CrudRepository crudRepository;
 
+    private static final String FIND_PRIORITY_BY_ID = "FROM Priority WHERE id = :pId";
+
+    private static final String FIND_ALL_PRIORITIES = "FROM Priority";
+
     /**
      * Find priority bi id
      *
@@ -31,7 +35,7 @@ public class HibernatePriorityRepository implements PriorityRepository {
     @Override
     public Optional<Priority> getPriorityById(int priorityId) {
         return crudRepository.optional(
-                "FROM Priority WHERE id = :pId",
+                FIND_PRIORITY_BY_ID,
                 Priority.class,
                 Map.of("pId", priorityId));
     }
@@ -43,7 +47,7 @@ public class HibernatePriorityRepository implements PriorityRepository {
      */
     @Override
     public List<Priority> findAllPriorities() {
-        return crudRepository.query("FROM Priority", Priority.class);
+        return crudRepository.query(FIND_ALL_PRIORITIES, Priority.class);
     }
 
 }

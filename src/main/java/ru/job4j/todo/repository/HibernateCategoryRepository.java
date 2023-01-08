@@ -21,6 +21,10 @@ import java.util.Map;
 public class HibernateCategoryRepository implements CategoryRepository {
     private final CrudRepository crudRepository;
 
+    private static final String FIND_CATEGORY_BY_ID = "FROM Category WHERE id IN (:cIds)";
+
+    private static final String FIND_ALL_CATEGORIES = "FROM Category";
+
     /**
      * Find categories by id/ids
      *
@@ -30,7 +34,7 @@ public class HibernateCategoryRepository implements CategoryRepository {
     @Override
     public List<Category> findCategoriesByIds(List<Integer> ids) {
         return crudRepository.query(
-                "FROM Category WHERE id IN (:cIds)",
+                FIND_CATEGORY_BY_ID,
                 Category.class,
                 Map.of("cIds", ids));
     }
@@ -42,7 +46,7 @@ public class HibernateCategoryRepository implements CategoryRepository {
      */
     @Override
     public List<Category> findAllCategories() {
-        return crudRepository.query("FROM Category", Category.class);
+        return crudRepository.query(FIND_ALL_CATEGORIES, Category.class);
     }
 
 }

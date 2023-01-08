@@ -82,9 +82,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public List<Task> findAllTasks(int userId) {
-        List<Task> uId = crudRepository.query(FIND_ALL_TASKS, Task.class, Map.of("uId", userId));
-        System.out.println(uId + "Hhhh");
-        return uId;
+        return crudRepository.query(FIND_ALL_TASKS, Task.class, Map.of("uId", userId));
     }
 
     /**

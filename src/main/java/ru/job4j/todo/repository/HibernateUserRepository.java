@@ -21,6 +21,8 @@ import java.util.Optional;
 public class HibernateUserRepository implements UserRepository {
     private final CrudRepository crudRepository;
 
+    private static final String FIND_BY_LOGIN_AND_PASSWORD = "FROM User WHERE login = :uLogin AND password = :uPass";
+
     /**
      * Save task in DB
      *
@@ -55,7 +57,7 @@ public class HibernateUserRepository implements UserRepository {
         Optional<User> user = Optional.empty();
         try {
             user = crudRepository.optional(
-                    "FROM User WHERE login = :uLogin AND password = :uPass",
+                    FIND_BY_LOGIN_AND_PASSWORD,
                     User.class,
                     Map.of("uLogin", login, "uPass", password));
         } catch (IllegalStateException e) {

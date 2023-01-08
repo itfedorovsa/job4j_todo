@@ -58,6 +58,7 @@
                 <th scope="col">Task priority</th>
                 <th scope="col">User</th>
                 <th scope="col">Task category</th>
+                <th scope="col">Created / Timezone</th>
             </tr>
             </thead>
             <tbody>
@@ -75,6 +76,9 @@
                     <a th:each="category: ${task.categories}">
                         <span th:utext="${category.name + '<br>'}"></span>
                     </a>
+                </th>
+                <th>
+                    <span th:text="${formattedDatesTimes.get(task.id) + ' / ' + task.user.timezone}"></span>
                 </th>
             </tr>
             </tbody>

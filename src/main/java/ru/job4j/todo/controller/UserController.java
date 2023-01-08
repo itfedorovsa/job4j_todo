@@ -10,7 +10,10 @@ import ru.job4j.todo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 /**
  * UserController
@@ -33,7 +36,10 @@ public class UserController {
      * @return fail or success registration page
      */
     @PostMapping("/registration")
-    public String registration(Model model, @ModelAttribute User user) {
+    public String registration(Model model,
+                               @ModelAttribute User user,
+                               @RequestParam("timezone.getID()") String timezone) {
+        user.setTimezone(timezone);
         Optional<User> regUser = userService.add(user);
         if (regUser.isPresent() && regUser.get().getId() == 0) {
             model.addAttribute("message", "A user with this email is already exists");
@@ -52,6 +58,7 @@ public class UserController {
     @GetMapping("/formAddUser")
     public String addPost(Model model, HttpSession httpSession) {
         model.addAttribute("user", getUser(httpSession));
+        model.addAttribute("timezones", getTimezones());
         return "user/addUser";
     }
 
@@ -146,8 +153,11 @@ public class UserController {
      * @return updateProfile.html - user updating form
      */
     @GetMapping("/updateProfile/{userId}")
-    public String updateProfile(Model model, HttpSession httpSession, @PathVariable("userId") int userId) {
+    public String updateProfile(Model model,
+                                @PathVariable("userId") int userId,
+                                HttpSession httpSession) {
         model.addAttribute("user", getUser(httpSession));
+        model.addAttribute("timezones", getTimezones());
         return "user/updateProfile";
     }
 
@@ -159,9 +169,12 @@ public class UserController {
      * @return log in page to re log in
      */
     @PostMapping("/updateProfile")
-    public String updatePost(@ModelAttribute User user, HttpSession httpSession) {
+    public String updatePost(@ModelAttribute User user,
+                             @RequestParam("timezone") String timezone,
+                             HttpSession httpSession) {
         User u = (User) httpSession.getAttribute("user");
         user.setId(u.getId());
+        user.setTimezone(timezone);
         userService.update(user);
         httpSession.invalidate();
         return "redirect:/loginPage";
@@ -180,5 +193,18 @@ public class UserController {
             user.setName("Guest");
         }
         return user;
+    }
+
+    /**
+     * Create a list of all available Timezone
+     *
+     * @return List of all available Timezone
+     */
+    private List<TimeZone> getTimezones() {
+        List<TimeZone> zones = new ArrayList<>();
+        for (String timeId : TimeZone.getAvailableIDs()) {
+            zones.add(TimeZone.getTimeZone(timeId));
+        }
+        return zones;
     }
 }

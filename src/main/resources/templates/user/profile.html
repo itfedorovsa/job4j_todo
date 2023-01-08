@@ -55,6 +55,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Login</th>
                             <th scope="col">Password</th>
+                            <th scope="col">Timezone</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -67,6 +68,7 @@
                             </td>
                             <td th:text="${user.login}"/>
                             <td th:text="${user.password}"/>
+                            <td th:text="${user.timezone}"/>
                         </tr>
                         </tbody>
                     </table>
