@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Hibernate task repository
+ * Hibernate Task repository
  *
  * @author itfedorovsa (itfedorovsa@gmail.com)
  * @version 1.0
@@ -20,6 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ThreadSafe
 public class HibernateTaskRepository implements TaskRepository {
+
     private final CrudRepository crudRepository;
 
     private static final String FIND_ALL_TASKS = """

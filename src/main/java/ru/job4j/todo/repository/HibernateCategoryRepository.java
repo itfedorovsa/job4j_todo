@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Hibernate category repository
+ * Hibernate Category repository
  *
  * @author itfedorovsa (itfedorovsa@gmail.com)
  * @version 1.0
@@ -19,6 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 @ThreadSafe
 public class HibernateCategoryRepository implements CategoryRepository {
+
     private final CrudRepository crudRepository;
 
     private static final String FIND_CATEGORY_BY_ID = "FROM Category WHERE id IN (:cIds)";

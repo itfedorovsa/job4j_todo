@@ -17,7 +17,9 @@ import java.util.List;
  * @since 20.12.22
  */
 public class ToDoRun {
+
     public static void main(String[] args) {
+
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         try {
@@ -40,4 +42,5 @@ public class ToDoRun {
         session.close();
         return rsl;
     }
+
 }

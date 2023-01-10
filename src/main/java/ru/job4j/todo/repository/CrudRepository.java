@@ -23,6 +23,7 @@ import java.util.function.Function;
 @AllArgsConstructor
 @ThreadSafe
 public class CrudRepository {
+
     private final SessionFactory sf;
 
     /**

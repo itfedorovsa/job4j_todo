@@ -19,6 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ThreadSafe
 public class SimpleUserService implements UserService {
+
     private final UserRepository store;
 
     @Override

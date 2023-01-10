@@ -16,10 +16,7 @@ import ru.job4j.todo.service.TaskService;
 import javax.servlet.http.HttpSession;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Task Controller
@@ -32,8 +29,11 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 @ThreadSafe
 public class TaskController {
+
     private final TaskService taskService;
+
     private final PriorityService priorityService;
+
     private final CategoryService categoryService;
 
     /**
@@ -245,10 +245,16 @@ public class TaskController {
      */
     private Map<Integer, String> getFormattedDatesTimes(User user, List<Task> tasks) {
         Map<Integer, String> formattedDatesTimes = new HashMap<>();
+        String timezone = user.getTimezone();
+        String defaultTimezone = TimeZone.getDefault().getID();
+        if (timezone == null) {
+            timezone = defaultTimezone;
+        }
         for (Task task : tasks) {
-            String time = task.getCreated().atZone(
-                    ZoneId.of(user.getTimezone())
-            ).format(DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd"));
+            String time = task.getCreated()
+                    .atZone(ZoneId.of(defaultTimezone))
+                    .withZoneSameInstant(ZoneId.of(timezone))
+                    .format(DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd"));
             formattedDatesTimes.put(task.getId(), time);
         }
         return formattedDatesTimes;

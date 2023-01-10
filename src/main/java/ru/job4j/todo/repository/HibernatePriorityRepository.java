@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Hibernate priority repository
+ * Hibernate Priority repository
  *
  * @author itfedorovsa (itfedorovsa@gmail.com)
  * @version 1.0
@@ -20,6 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ThreadSafe
 public class HibernatePriorityRepository implements PriorityRepository {
+
     private final CrudRepository crudRepository;
 
     private static final String FIND_PRIORITY_BY_ID = "FROM Priority WHERE id = :pId";

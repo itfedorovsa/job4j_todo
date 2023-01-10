@@ -20,6 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ThreadSafe
 public class SimplePriorityService implements PriorityService {
+
     private final PriorityRepository store;
 
     @Override

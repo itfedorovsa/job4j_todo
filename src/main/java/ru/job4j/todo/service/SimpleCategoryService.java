@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @ThreadSafe
 public class SimpleCategoryService implements CategoryService {
+
     private final CategoryRepository store;
 
     @Override

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 @AllArgsConstructor
 @ThreadSafe
 public class IndexController {
+
     private final TaskService taskService;
 
     /**

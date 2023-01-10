@@ -23,6 +23,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ThreadSafe
 public class SimpleTaskService implements TaskService {
+
     private final TaskRepository store;
 
     @Override

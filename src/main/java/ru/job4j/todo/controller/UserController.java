@@ -26,6 +26,7 @@ import java.util.TimeZone;
 @AllArgsConstructor
 @ThreadSafe
 public class UserController {
+
     private final UserService userService;
 
     /**
