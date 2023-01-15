@@ -14,6 +14,7 @@ import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -29,6 +30,8 @@ import java.util.*;
 @AllArgsConstructor
 @ThreadSafe
 public class TaskController {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
 
     private final TaskService taskService;
 
@@ -47,9 +50,9 @@ public class TaskController {
     public String allTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
         List<Task> allTasks = taskService.findAllTasks(user.getId());
+        getFormattedTasks(user, allTasks);
         model.addAttribute("allTasks", allTasks);
         model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
-        model.addAttribute("formattedDatesTimes", getFormattedDatesTimes(user, allTasks));
         model.addAttribute("user", user);
         return "task/allTasks";
     }
@@ -65,9 +68,9 @@ public class TaskController {
     public String newTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
         List<Task> newTasks = taskService.findNewTasks(user.getId());
+        getFormattedTasks(user, newTasks);
         model.addAttribute("newTasks", newTasks);
         model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
-        model.addAttribute("formattedDatesTimes", getFormattedDatesTimes(user, newTasks));
         model.addAttribute("user", user);
         return "task/newTasks";
     }
@@ -83,9 +86,9 @@ public class TaskController {
     public String finishedTasks(Model model, HttpSession httpSession) {
         User user = getUser(httpSession);
         List<Task> finishedTasks = taskService.findFinishedTasks(user.getId());
+        getFormattedTasks(user, finishedTasks);
         model.addAttribute("finishedTasks", finishedTasks);
         model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
-        model.addAttribute("formattedDatesTimes", getFormattedDatesTimes(user, finishedTasks));
         model.addAttribute("user", user);
         return "task/finishedTasks";
     }
@@ -237,27 +240,27 @@ public class TaskController {
     }
 
     /**
-     * Map of formatted dates and times on user's timezone
+     * Changes tasks' LocalDateTime to formatted LDT with user's timezone
      *
      * @param user  Current User
      * @param tasks List of all, new or finished tasks
-     * @return Map of formatted dates and times based on user's timezone
+     * @return List of tasks with changed LDT
      */
-    private Map<Integer, String> getFormattedDatesTimes(User user, List<Task> tasks) {
-        Map<Integer, String> formattedDatesTimes = new HashMap<>();
+    private List<Task> getFormattedTasks(User user, List<Task> tasks) {
         String timezone = user.getTimezone();
         String defaultTimezone = TimeZone.getDefault().getID();
+
         if (timezone == null) {
             timezone = defaultTimezone;
         }
         for (Task task : tasks) {
-            String time = task.getCreated()
+            String formatted = task.getCreated()
                     .atZone(ZoneId.of(defaultTimezone))
                     .withZoneSameInstant(ZoneId.of(timezone))
-                    .format(DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd"));
-            formattedDatesTimes.put(task.getId(), time);
+                    .format(FORMATTER);
+            task.setCreated(LocalDateTime.parse(formatted, FORMATTER));
         }
-        return formattedDatesTimes;
+        return tasks;
     }
 
 }

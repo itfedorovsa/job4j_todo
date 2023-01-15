@@ -78,7 +78,7 @@
                     </a>
                 </th>
                 <th>
-                    <span th:text="${formattedDatesTimes.get(task.id) + ' / ' + task.user.timezone}"></span>
+                    <span th:text="${task.created + ' / ' + task.user.timezone}"></span>
                 </th>
             </tr>
             </tbody>
