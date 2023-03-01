@@ -25,7 +25,7 @@ import java.util.TimeZone;
 @Controller
 @AllArgsConstructor
 @ThreadSafe
-public class UserController {
+public class UserController implements UserSessionController {
 
     private final UserService userService;
 
@@ -33,7 +33,7 @@ public class UserController {
      * Registration post page
      *
      * @param model Model
-     * @param user  Empty user to fill
+     * @param user  Empty User to fill
      * @return fail or success registration page
      */
     @PostMapping("/registration")
@@ -42,8 +42,8 @@ public class UserController {
                                @RequestParam("timezone.getID()") String timezone) {
         user.setTimezone(timezone);
         Optional<User> regUser = userService.add(user);
-        if (regUser.isPresent() && regUser.get().getId() == 0) {
-            model.addAttribute("message", "A user with this email is already exists");
+        if (regUser.isEmpty() || regUser.get().getId() == 0) {
+            model.addAttribute("message", "A user with this login is already exists");
             return "redirect:/fail";
         }
         return "redirect:/success";
@@ -53,7 +53,7 @@ public class UserController {
      * Sign up form
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HttpSession
      * @return addUser.html - new user creating form
      */
     @GetMapping("/formAddUser")
@@ -67,7 +67,7 @@ public class UserController {
      * Affirmed registration page
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HttpSession
      * @return Affirmed registration page
      */
     @GetMapping("/success")
@@ -80,7 +80,7 @@ public class UserController {
      * Declined registration page
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HttpSession
      * @return Declined registration page
      */
     @GetMapping("/fail")
@@ -123,7 +123,7 @@ public class UserController {
     /**
      * Log out page
      *
-     * @param httpSession Http Session
+     * @param httpSession HttpSession
      * @return log in page
      */
     @GetMapping("/logout")
@@ -136,7 +136,7 @@ public class UserController {
      * User profile page
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HttpSession
      * @return profile.html - current user data page
      */
     @GetMapping("/profile")
@@ -149,7 +149,7 @@ public class UserController {
      * Updating user profile
      *
      * @param model       Model
-     * @param httpSession Http Session
+     * @param httpSession HttpSession
      * @param userId      current user id
      * @return updateProfile.html - user updating form
      */
@@ -166,11 +166,12 @@ public class UserController {
      * User update post page
      *
      * @param user        current user
-     * @param httpSession Http Session
+     * @param httpSession HttpSession
      * @return log in page to re log in
      */
     @PostMapping("/updateProfile")
-    public String updatePost(@ModelAttribute User user,
+    public String updatePost(Model model,
+                             @ModelAttribute User user,
                              @RequestParam("timezone") String timezone,
                              HttpSession httpSession) {
         User u = (User) httpSession.getAttribute("user");
@@ -179,21 +180,6 @@ public class UserController {
         userService.update(user);
         httpSession.invalidate();
         return "redirect:/loginPage";
-    }
-
-    /**
-     * Gives "Guest" name if user is unregistered
-     *
-     * @param httpSession Http Session
-     * @return user with "Guest" name or user with currrent name
-     */
-    private User getUser(HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Guest");
-        }
-        return user;
     }
 
     /**
@@ -208,4 +194,5 @@ public class UserController {
         }
         return zones;
     }
+
 }

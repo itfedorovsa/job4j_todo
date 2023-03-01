@@ -46,11 +46,12 @@
             </div>
         </div>
     </nav>
+    <br/>
+    <br/>
+    <h2 align="center">Update your profile:</h2>
+    <br/>
     <div class="row pt-3">
-        <div class="card" style="width: 100%">
-            <div class="card-header">
-                Update your profile.
-            </div>
+        <div class="card p-3 mb-2 bg-label text-dark col-md-6 m-auto" style="width: 100%">
             <div class="card-body">
                 <form th:action="@{/updateProfile}" method="POST" th:object="${user}">
                     <input type="hidden" name="id" th:field="*{id}"/>
@@ -77,4 +78,3 @@
 </div>
 </body>
 </html>
-

@@ -17,7 +17,9 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 /**
  * Task Controller
@@ -29,7 +31,7 @@ import java.util.*;
 @Controller
 @AllArgsConstructor
 @ThreadSafe
-public class TaskController {
+public class TaskController implements UserSessionController {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
 
@@ -40,10 +42,21 @@ public class TaskController {
     private final CategoryService categoryService;
 
     /**
+     * Add User in Model by "user" key in all Model in this controller
+     *
+     * @param httpSession HTTPSession
+     * @return User
+     */
+    @ModelAttribute("user")
+    public User addUserToModel(HttpSession httpSession) {
+        return getUser(httpSession);
+    }
+
+    /**
      * All tasks page
      *
      * @param model       Model
-     * @param httpSession HTTP Session
+     * @param httpSession HTTPSession
      * @return allTasks.html - all tasks from list
      */
     @GetMapping("/allTasks")
@@ -52,8 +65,6 @@ public class TaskController {
         List<Task> allTasks = taskService.findAllTasks(user.getId());
         getFormattedTasks(user, allTasks);
         model.addAttribute("allTasks", allTasks);
-        model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
-        model.addAttribute("user", user);
         return "task/allTasks";
     }
 
@@ -61,7 +72,7 @@ public class TaskController {
      * New tasks page
      *
      * @param model       Model
-     * @param httpSession HTTP Session
+     * @param httpSession HTTPSession
      * @return newTasks.html - new (opened) tasks from list
      */
     @GetMapping("/newTasks")
@@ -70,8 +81,6 @@ public class TaskController {
         List<Task> newTasks = taskService.findNewTasks(user.getId());
         getFormattedTasks(user, newTasks);
         model.addAttribute("newTasks", newTasks);
-        model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
-        model.addAttribute("user", user);
         return "task/newTasks";
     }
 
@@ -79,7 +88,7 @@ public class TaskController {
      * Finished tasks page
      *
      * @param model       Model
-     * @param httpSession HTTP Session
+     * @param httpSession HTTPSession
      * @return finishedTasks.html - finished (closed) tasks from list
      */
     @GetMapping("/finishedTasks")
@@ -88,8 +97,6 @@ public class TaskController {
         List<Task> finishedTasks = taskService.findFinishedTasks(user.getId());
         getFormattedTasks(user, finishedTasks);
         model.addAttribute("finishedTasks", finishedTasks);
-        model.addAttribute("taskCategories", taskService.findAllTasks(user.getId()));
-        model.addAttribute("user", user);
         return "task/finishedTasks";
     }
 
@@ -97,12 +104,11 @@ public class TaskController {
      * New task creating page
      *
      * @param model       Model
-     * @param httpSession HTTP Session
+     * @param httpSession HTTPSession
      * @return newTask.html - new task creating page
      */
     @GetMapping("/newTask")
     public String newTask(Model model, HttpSession httpSession) {
-        model.addAttribute("user", getUser(httpSession));
         model.addAttribute("priorities", priorityService.findAllPriorities());
         model.addAttribute("categories", categoryService.findAllCategories());
         return "task/newTask";
@@ -112,8 +118,8 @@ public class TaskController {
     /**
      * Post method for adding a task
      *
-     * @param task        "task" attribute in model
-     * @param httpSession HTTP Session
+     * @param task        "task" model attribute
+     * @param httpSession HTTPSession
      * @return All tasks page
      */
     @PostMapping("/createTask")
@@ -121,7 +127,6 @@ public class TaskController {
                              @RequestParam("priority.id") int priorityId,
                              @RequestParam List<Integer> categoriesIds,
                              HttpSession httpSession) {
-
         Priority priorityById = priorityService.getPriorityById(priorityId)
                 .orElseThrow(() -> new NoSuchElementException("Priority with id " + priorityId + " is missing."));
         task.setPriority(priorityById);
@@ -136,7 +141,7 @@ public class TaskController {
      *
      * @param model       Model
      * @param id          Current task id
-     * @param httpSession HTTP Session
+     * @param httpSession HTTPSession
      * @return taskDesc.html - page with task's description
      */
     @GetMapping("/formTaskDesc/{taskId}")
@@ -146,7 +151,6 @@ public class TaskController {
         Task taskById = taskService.findTaskById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task with id " + id + " is missing."));
         model.addAttribute("task", taskById);
-        model.addAttribute("user", getUser(httpSession));
         return "task/taskDesc";
     }
 
@@ -154,7 +158,7 @@ public class TaskController {
      * Post method for marking task as done
      *
      * @param task        "task" attribute in model
-     * @param httpSession HTTP Sessiond
+     * @param httpSession HTTPSession
      * @return All tasks page
      */
     @PostMapping("/completeTask")
@@ -195,7 +199,6 @@ public class TaskController {
         Task taskById = taskService.findTaskById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task with id " + id + " is missing."));
         model.addAttribute("task", taskById);
-        model.addAttribute("user", getUser(httpSession));
         model.addAttribute("priorities", priorityService.findAllPriorities());
         model.addAttribute("categories", categoryService.findAllCategories());
         return "task/updateTask";
@@ -206,7 +209,7 @@ public class TaskController {
      *
      * @param task        "task" attribute in model
      * @param isDone      Task's "isDone" field value
-     * @param httpSession HTTP Session
+     * @param httpSession HTTPSession
      * @return All tasks page
      */
     @PostMapping("/updateTask")
@@ -225,26 +228,11 @@ public class TaskController {
     }
 
     /**
-     * Gives "Guest" name if user is unregistered
-     *
-     * @param httpSession HTTPSession
-     * @return User with "Guest" name or user with currrent name
-     */
-    private User getUser(HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Guest");
-        }
-        return user;
-    }
-
-    /**
      * Changes tasks' LocalDateTime to formatted LDT with user's timezone
      *
      * @param user  Current User
      * @param tasks List of all, new or finished tasks
-     * @return List of tasks with changed LDT
+     * @return List of tasks with changed LocalDateTime
      */
     private List<Task> getFormattedTasks(User user, List<Task> tasks) {
         String timezone = user.getTimezone();

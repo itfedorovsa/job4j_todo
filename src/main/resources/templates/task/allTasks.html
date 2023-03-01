@@ -64,7 +64,7 @@
             </tr>
             </thead>
             <tbody>
-            <a th:each="task: ${allTasks}">
+            <tr th:each="task: ${allTasks}">
                 <th>
                     <a th:href="@{|/formTaskDesc/${task.id}|}" th:text="${task.description}"></a>
                 </th>
@@ -90,7 +90,7 @@
                 <th>
                     <span th:text="${task.created + ' / ' + task.user.timezone}"></span>
                 </th>
-            </a>
+            </tr>
             </tbody>
         </table>
     </div>

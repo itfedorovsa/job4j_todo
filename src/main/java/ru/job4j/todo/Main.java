@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
@@ -24,8 +26,7 @@ public class Main {
 
     private Properties loadDbProperties() {
         Properties cfg = new Properties();
-        try (BufferedReader io = new BufferedReader(
-                new InputStreamReader(Main.class.getClassLoader().getResourceAsStream("db.properties")))) {
+        try (InputStream io = new FileInputStream("db/liquibase.properties")) {
             cfg.load(io);
         } catch (Exception e) {
             throw new IllegalStateException(e);

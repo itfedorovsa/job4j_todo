@@ -21,8 +21,6 @@ import java.util.Optional;
 @ThreadSafe
 public class HibernateTaskRepository implements TaskRepository {
 
-    private final CrudRepository crudRepository;
-
     private static final String FIND_ALL_TASKS = """
             SELECT DISTINCT t FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories
             WHERE user_id = :uId ORDER BY description ASC
@@ -43,8 +41,10 @@ public class HibernateTaskRepository implements TaskRepository {
             WHERE isDone = true AND user_id = :uId ORDER BY description ASC
             """;
 
+    private final CrudRepository crudRepository;
+
     /**
-     * Save task in DB
+     * Save Task in DB
      *
      * @param task Task
      * @return Optional of Task with added id
@@ -56,7 +56,7 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
-     * Update task in DB
+     * Update Task in DB
      *
      * @param task Task
      */
@@ -66,7 +66,7 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
-     * Delete task from BD
+     * Delete Task from BD
      *
      * @param task Task
      */
@@ -76,10 +76,10 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
-     * Find all tasks
+     * Find all Task
      *
      * @param userId User id
-     * @return List with all tasks
+     * @return List of Task
      */
     @Override
     public List<Task> findAllTasks(int userId) {
@@ -87,10 +87,10 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
-     * Find task by id
+     * Find Task by id
      *
      * @param taskId Task id
-     * @return Optional of found task
+     * @return Optional of found Task
      */
     @Override
     public Optional<Task> findTaskById(int taskId) {
@@ -98,10 +98,10 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
-     * Find new tasks
+     * Find list of new Task
      *
      * @param userId User id
-     * @return List of new tasks
+     * @return List of new Task
      */
     @Override
     public List<Task> findNewTasks(int userId) {
@@ -109,10 +109,10 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
-     * Find finished tasks
+     * Find list of finished Task
      *
      * @param userId User id
-     * @return List of finished tasks
+     * @return List of finished Task
      */
     @Override
     public List<Task> findFinishedTasks(int userId) {

@@ -20,17 +20,17 @@ import java.util.Map;
 @ThreadSafe
 public class HibernateCategoryRepository implements CategoryRepository {
 
-    private final CrudRepository crudRepository;
-
     private static final String FIND_CATEGORY_BY_ID = "FROM Category WHERE id IN (:cIds)";
 
     private static final String FIND_ALL_CATEGORIES = "FROM Category";
 
+    private final CrudRepository crudRepository;
+
     /**
-     * Find categories by id/ids
+     * Find list of Category by id/ids
      *
-     * @param ids list of categories' id/ids
-     * @return list of categories
+     * @param ids list of Category id/ids
+     * @return list of Category
      */
     @Override
     public List<Category> findCategoriesByIds(List<Integer> ids) {
@@ -41,9 +41,9 @@ public class HibernateCategoryRepository implements CategoryRepository {
     }
 
     /**
-     * Find all categories
+     * Find all Category
      *
-     * @return List of all categories
+     * @return List of Category
      */
     @Override
     public List<Category> findAllCategories() {

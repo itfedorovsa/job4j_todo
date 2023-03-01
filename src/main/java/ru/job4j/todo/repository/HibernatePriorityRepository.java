@@ -21,17 +21,17 @@ import java.util.Optional;
 @ThreadSafe
 public class HibernatePriorityRepository implements PriorityRepository {
 
-    private final CrudRepository crudRepository;
-
     private static final String FIND_PRIORITY_BY_ID = "FROM Priority WHERE id = :pId";
 
     private static final String FIND_ALL_PRIORITIES = "FROM Priority";
 
+    private final CrudRepository crudRepository;
+
     /**
-     * Find priority bi id
+     * Find Priority by id
      *
-     * @param priorityId priority id
-     * @return Optional of priority
+     * @param priorityId Priority id
+     * @return Optional of Priority or empty Optional
      */
     @Override
     public Optional<Priority> getPriorityById(int priorityId) {
@@ -42,9 +42,9 @@ public class HibernatePriorityRepository implements PriorityRepository {
     }
 
     /**
-     * Find all priorities
+     * Find all Priority
      *
-     * @return List of all priorities
+     * @return List of Priority
      */
     @Override
     public List<Priority> findAllPriorities() {

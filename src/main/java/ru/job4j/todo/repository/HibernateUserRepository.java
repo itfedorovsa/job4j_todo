@@ -20,24 +20,28 @@ import java.util.Optional;
 @ThreadSafe
 public class HibernateUserRepository implements UserRepository {
 
-    private final CrudRepository crudRepository;
-
     private static final String FIND_BY_LOGIN_AND_PASSWORD = "FROM User WHERE login = :uLogin AND password = :uPass";
 
+    private final CrudRepository crudRepository;
+
     /**
-     * Save task in DB
+     * Save User in DB
      *
      * @param user User
      * @return Optional of User with added id
      */
     @Override
     public Optional<User> add(User user) {
-        crudRepository.run(session -> session.save(user));
-        return Optional.of(user);
+        try {
+            crudRepository.run(session -> session.save(user));
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return user.getId() == 0 ? Optional.empty() : Optional.of(user);
     }
 
     /**
-     * Update user in DB
+     * Update User in DB
      *
      * @param user User
      */
@@ -47,11 +51,11 @@ public class HibernateUserRepository implements UserRepository {
     }
 
     /**
-     * Find by login and password
+     * Find User by login and password
      *
      * @param login    Login
      * @param password Password
-     * @return Optional of user
+     * @return Optional of User
      */
     @Override
     public Optional<User> findByLoginAndPassword(String login, String password) {
