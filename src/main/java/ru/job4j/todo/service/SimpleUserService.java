@@ -22,16 +22,34 @@ public class SimpleUserService implements UserService {
 
     private final UserRepository store;
 
+    /**
+     * Save User in DB
+     *
+     * @param user User
+     * @return Optional of User with added id
+     */
     @Override
     public Optional<User> add(User user) {
         return store.add(user);
     }
 
+    /**
+     * Update User in DB
+     *
+     * @param user User
+     */
     @Override
     public void update(User user) {
         store.update(user);
     }
 
+    /**
+     * Find User by login and password
+     *
+     * @param login    Login
+     * @param password Password
+     * @return Optional of User
+     */
     @Override
     public Optional<User> findByLoginAndPassword(String login, String password) {
         return store.findByLoginAndPassword(login, password);

@@ -13,10 +13,28 @@ import java.util.Optional;
  */
 public interface UserService {
 
+    /**
+     * Save User in DB
+     *
+     * @param user User
+     * @return Optional of User with added id
+     */
     Optional<User> add(User user);
 
+    /**
+     * Update User in DB
+     *
+     * @param user User
+     */
     void update(User user);
 
+    /**
+     * Find User by login and password
+     *
+     * @param login    Login
+     * @param password Password
+     * @return Optional of User
+     */
     Optional<User> findByLoginAndPassword(String login, String password);
 
 }

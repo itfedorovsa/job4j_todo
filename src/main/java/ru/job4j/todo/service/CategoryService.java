@@ -13,8 +13,19 @@ import java.util.List;
  */
 public interface CategoryService {
 
+    /**
+     * Find list of Category by id/ids
+     *
+     * @param ids list of Category id/ids
+     * @return list of Category
+     */
     List<Category> findCategoriesByIds(List<Integer> ids);
 
+    /**
+     * Find all Category
+     *
+     * @return List of Category
+     */
     List<Category> findAllCategories();
 
 }

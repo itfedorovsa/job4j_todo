@@ -26,12 +26,26 @@ public class SimpleTaskService implements TaskService {
 
     private final TaskRepository store;
 
+    /**
+     * Save Task in DB
+     *
+     * @param task Task
+     * @return Optional of Task with added id
+     */
     @Override
     public Optional<Task> addTask(User user, Task task) {
         task.setUser(user);
         return store.addTask(task);
     }
 
+    /**
+     * Mark task as done
+     *
+     * @param user       User
+     * @param task       Task
+     * @param priority   Priority
+     * @param categories List of Category
+     */
     @Override
     public void markAsDone(User user, Task task, Priority priority, List<Category> categories) {
         task.setUser(user);
@@ -41,6 +55,11 @@ public class SimpleTaskService implements TaskService {
         store.updateTask(task);
     }
 
+    /**
+     * Update Task in DB
+     *
+     * @param task Task
+     */
     @Override
     public void updateTask(User user, boolean isDone, Task task) {
         task.setUser(user);
@@ -48,26 +67,55 @@ public class SimpleTaskService implements TaskService {
         store.updateTask(task);
     }
 
+    /**
+     * Delete Task from BD
+     *
+     * @param task Task
+     */
     @Override
     public void deleteTask(Task task) {
         store.deleteTask(task);
     }
 
-    @Override
-    public Optional<Task> findTaskById(int taskId) {
-        return store.findTaskById(taskId);
-    }
-
+    /**
+     * Find all Task
+     *
+     * @param userId User id
+     * @return List of Task
+     */
     @Override
     public List<Task> findAllTasks(int userId) {
         return store.findAllTasks(userId);
     }
 
+    /**
+     * Find Task by id
+     *
+     * @param taskId Task id
+     * @return Optional of found Task
+     */
+    @Override
+    public Optional<Task> findTaskById(int taskId) {
+        return store.findTaskById(taskId);
+    }
+
+    /**
+     * Find list of new Task
+     *
+     * @param userId User id
+     * @return List of new Task
+     */
     @Override
     public List<Task> findNewTasks(int userId) {
         return store.findNewTasks(userId);
     }
 
+    /**
+     * Find list of finished Task
+     *
+     * @param userId User id
+     * @return List of finished Task
+     */
     @Override
     public List<Task> findFinishedTasks(int userId) {
         return store.findFinishedTasks(userId);

@@ -14,8 +14,19 @@ import java.util.Optional;
  */
 public interface PriorityService {
 
+    /**
+     * Find Priority by id
+     *
+     * @param priorityId Priority id
+     * @return Optional of Priority or empty Optional
+     */
     Optional<Priority> getPriorityById(int priorityId);
 
+    /**
+     * Find all Priority
+     *
+     * @return List of Priority
+     */
     List<Priority> findAllPriorities();
 
 }

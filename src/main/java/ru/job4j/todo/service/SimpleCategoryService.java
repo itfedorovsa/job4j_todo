@@ -22,11 +22,22 @@ public class SimpleCategoryService implements CategoryService {
 
     private final CategoryRepository store;
 
+    /**
+     * Find list of Category by id/ids
+     *
+     * @param ids list of Category id/ids
+     * @return list of Category
+     */
     @Override
     public List<Category> findCategoriesByIds(List<Integer> ids) {
         return store.findCategoriesByIds(ids);
     }
 
+    /**
+     * Find all Category
+     *
+     * @return List of Category
+     */
     @Override
     public List<Category> findAllCategories() {
         return store.findAllCategories();

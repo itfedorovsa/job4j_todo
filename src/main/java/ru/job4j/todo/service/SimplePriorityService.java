@@ -23,11 +23,22 @@ public class SimplePriorityService implements PriorityService {
 
     private final PriorityRepository store;
 
+    /**
+     * Find Priority by id
+     *
+     * @param priorityId Priority id
+     * @return Optional of Priority or empty Optional
+     */
     @Override
     public Optional<Priority> getPriorityById(int priorityId) {
         return store.getPriorityById(priorityId);
     }
 
+    /**
+     * Find all Priority
+     *
+     * @return List of Priority
+     */
     @Override
     public List<Priority> findAllPriorities() {
         return store.findAllPriorities();
