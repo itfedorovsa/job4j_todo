@@ -1,12 +1,15 @@
 # job4j_todo
 
+# About
+
 This application is task list website. Users can post, view, edit, mark as done or delete tasks. Also users can switch
 between all, new or finished tasks. Each user sees only their own tasks. The task's creation time is displayed according
 to the user's time zone.
 
+***
+
 # Used technologies
 
-Implemented with:
 <ul>
  <li>JDK 17</li>
  <li>Maven 3.8.5</li>
@@ -16,9 +19,11 @@ Implemented with:
  <li>Thymeleaf 2.7.3</li>
  <li>JDBC 4</li>
  <li>Hibernate 5.6.11.Final</li>
- <li>PostgreSQL 42.2.9</li>
+ <li>PostgreSQL 42.2.27</li>
  <li>Liquibase 4.15.0</li>
 </ul>
+
+***
 
 # Environment requirements
 
@@ -30,6 +35,8 @@ Implemented with:
  <li>Run this file through "java -jar job4j_todo-1.0-SNAPSHOT.jar" command</li>
  <li>Then go to the "http://localhost:8080/index" page</li>
 </ul>
+
+***
 
 # Screenshots
 
@@ -66,5 +73,16 @@ Implemented with:
 - All tasks view by another user:
   ![All tasks view by another user](src/main/resources/app_screenshots/16_all_tasks_page_by_another_user.png)
 
-Contact me: itfedorovsa@gmail.com
+***
+
+# Todo list
+
+- Add a user comment when closing a task
+- Cover the code to unit tests (add more tests)
+
+***
+
+# Contact
+
+Contact me if you have any questions: itfedorovsa@gmail.com
 
