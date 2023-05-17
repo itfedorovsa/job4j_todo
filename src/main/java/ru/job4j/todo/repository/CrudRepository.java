@@ -26,6 +26,9 @@ import java.util.function.Function;
 @ThreadSafe
 public class CrudRepository {
 
+    /**
+     * SessionFactory
+     */
     private final SessionFactory sf;
 
     /**

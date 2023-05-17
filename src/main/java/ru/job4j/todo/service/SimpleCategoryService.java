@@ -20,7 +20,10 @@ import java.util.List;
 @ThreadSafe
 public class SimpleCategoryService implements CategoryService {
 
-    private final CategoryRepository store;
+    /**
+     * CategoryRepository implementation
+     */
+    private final CategoryRepository categoryRepository;
 
     /**
      * Find list of Category by id/ids
@@ -30,7 +33,7 @@ public class SimpleCategoryService implements CategoryService {
      */
     @Override
     public List<Category> findCategoriesByIds(List<Integer> ids) {
-        return store.findCategoriesByIds(ids);
+        return categoryRepository.findCategoriesByIds(ids);
     }
 
     /**
@@ -40,7 +43,7 @@ public class SimpleCategoryService implements CategoryService {
      */
     @Override
     public List<Category> findAllCategories() {
-        return store.findAllCategories();
+        return categoryRepository.findAllCategories();
     }
 
 }

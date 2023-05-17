@@ -41,6 +41,9 @@ public class HibernateTaskRepository implements TaskRepository {
             WHERE isDone = true AND user_id = :uId ORDER BY description ASC
             """;
 
+    /**
+     * CrudRepository
+     */
     private final CrudRepository crudRepository;
 
     /**

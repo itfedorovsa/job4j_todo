@@ -27,6 +27,9 @@ import java.util.TimeZone;
 @ThreadSafe
 public class UserController implements UserSessionController {
 
+    /**
+     * UserService implementation
+     */
     private final UserService userService;
 
     /**

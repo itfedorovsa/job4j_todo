@@ -24,6 +24,9 @@ public class HibernateCategoryRepository implements CategoryRepository {
 
     private static final String FIND_ALL_CATEGORIES = "FROM Category";
 
+    /**
+     * CrudRepository
+     */
     private final CrudRepository crudRepository;
 
     /**

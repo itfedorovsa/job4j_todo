@@ -33,12 +33,24 @@ import java.util.TimeZone;
 @ThreadSafe
 public class TaskController implements UserSessionController {
 
+    /**
+     * Date and time formatter
+     */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
 
+    /**
+     * TaskService implementation
+     */
     private final TaskService taskService;
 
+    /**
+     * PriorityService implementation
+     */
     private final PriorityService priorityService;
 
+    /**
+     * CategoryService implementation
+     */
     private final CategoryService categoryService;
 
     /**

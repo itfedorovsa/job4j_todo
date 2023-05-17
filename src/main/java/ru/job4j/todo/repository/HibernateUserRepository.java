@@ -22,6 +22,9 @@ public class HibernateUserRepository implements UserRepository {
 
     private static final String FIND_BY_LOGIN_AND_PASSWORD = "FROM User WHERE login = :uLogin AND password = :uPass";
 
+    /**
+     * CrudRepository
+     */
     private final CrudRepository crudRepository;
 
     /**

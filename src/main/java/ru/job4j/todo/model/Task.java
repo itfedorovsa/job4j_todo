@@ -1,7 +1,6 @@
 package ru.job4j.todo.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.EqualsAndHashCode.Include;
 
 import javax.persistence.*;
@@ -15,9 +14,13 @@ import java.util.List;
  * @version 1.0
  * @since 27.11.22
  */
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder(builderMethodName = "of")
 @Table(name = "tasks")
 public class Task {
 

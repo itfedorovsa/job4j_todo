@@ -21,7 +21,10 @@ import java.util.Optional;
 @ThreadSafe
 public class SimplePriorityService implements PriorityService {
 
-    private final PriorityRepository store;
+    /**
+     * PriorityRepository implementation
+     */
+    private final PriorityRepository priorityRepository;
 
     /**
      * Find Priority by id
@@ -31,7 +34,7 @@ public class SimplePriorityService implements PriorityService {
      */
     @Override
     public Optional<Priority> getPriorityById(int priorityId) {
-        return store.getPriorityById(priorityId);
+        return priorityRepository.getPriorityById(priorityId);
     }
 
     /**
@@ -41,6 +44,6 @@ public class SimplePriorityService implements PriorityService {
      */
     @Override
     public List<Priority> findAllPriorities() {
-        return store.findAllPriorities();
+        return priorityRepository.findAllPriorities();
     }
 }

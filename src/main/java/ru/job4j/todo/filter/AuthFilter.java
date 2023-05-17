@@ -17,6 +17,15 @@ import java.io.IOException;
 @Component
 public class AuthFilter implements Filter {
 
+    /**
+     * Do filter
+     *
+     * @param request  ServletRequest
+     * @param response ServletResponse
+     * @param chain    FilterChain
+     * @throws IOException      IOException
+     * @throws ServletException ServletException
+     */
     @Override
     public void doFilter(
             ServletRequest request,
@@ -36,5 +45,6 @@ public class AuthFilter implements Filter {
         }
         chain.doFilter(req, res);
     }
+
 }
 

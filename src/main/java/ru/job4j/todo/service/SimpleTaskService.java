@@ -24,7 +24,10 @@ import java.util.Optional;
 @ThreadSafe
 public class SimpleTaskService implements TaskService {
 
-    private final TaskRepository store;
+    /**
+     * TaskRepository implementation
+     */
+    private final TaskRepository taskRepository;
 
     /**
      * Save Task in DB
@@ -35,7 +38,7 @@ public class SimpleTaskService implements TaskService {
     @Override
     public Optional<Task> addTask(User user, Task task) {
         task.setUser(user);
-        return store.addTask(task);
+        return taskRepository.addTask(task);
     }
 
     /**
@@ -52,7 +55,7 @@ public class SimpleTaskService implements TaskService {
         task.setDone(true);
         task.setPriority(priority);
         task.setCategories(categories);
-        store.updateTask(task);
+        taskRepository.updateTask(task);
     }
 
     /**
@@ -64,7 +67,7 @@ public class SimpleTaskService implements TaskService {
     public void updateTask(User user, boolean isDone, Task task) {
         task.setUser(user);
         task.setDone(isDone);
-        store.updateTask(task);
+        taskRepository.updateTask(task);
     }
 
     /**
@@ -74,7 +77,7 @@ public class SimpleTaskService implements TaskService {
      */
     @Override
     public void deleteTask(Task task) {
-        store.deleteTask(task);
+        taskRepository.deleteTask(task);
     }
 
     /**
@@ -85,7 +88,7 @@ public class SimpleTaskService implements TaskService {
      */
     @Override
     public List<Task> findAllTasks(int userId) {
-        return store.findAllTasks(userId);
+        return taskRepository.findAllTasks(userId);
     }
 
     /**
@@ -96,7 +99,7 @@ public class SimpleTaskService implements TaskService {
      */
     @Override
     public Optional<Task> findTaskById(int taskId) {
-        return store.findTaskById(taskId);
+        return taskRepository.findTaskById(taskId);
     }
 
     /**
@@ -107,7 +110,7 @@ public class SimpleTaskService implements TaskService {
      */
     @Override
     public List<Task> findNewTasks(int userId) {
-        return store.findNewTasks(userId);
+        return taskRepository.findNewTasks(userId);
     }
 
     /**
@@ -118,7 +121,7 @@ public class SimpleTaskService implements TaskService {
      */
     @Override
     public List<Task> findFinishedTasks(int userId) {
-        return store.findFinishedTasks(userId);
+        return taskRepository.findFinishedTasks(userId);
     }
 
 }

@@ -20,7 +20,10 @@ import java.util.Optional;
 @ThreadSafe
 public class SimpleUserService implements UserService {
 
-    private final UserRepository store;
+    /**
+     * UserRepository implementation
+     */
+    private final UserRepository userRepository;
 
     /**
      * Save User in DB
@@ -30,7 +33,7 @@ public class SimpleUserService implements UserService {
      */
     @Override
     public Optional<User> add(User user) {
-        return store.add(user);
+        return userRepository.add(user);
     }
 
     /**
@@ -40,7 +43,7 @@ public class SimpleUserService implements UserService {
      */
     @Override
     public void update(User user) {
-        store.update(user);
+        userRepository.update(user);
     }
 
     /**
@@ -52,7 +55,7 @@ public class SimpleUserService implements UserService {
      */
     @Override
     public Optional<User> findByLoginAndPassword(String login, String password) {
-        return store.findByLoginAndPassword(login, password);
+        return userRepository.findByLoginAndPassword(login, password);
     }
 
 }

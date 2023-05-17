@@ -25,6 +25,9 @@ public class HibernatePriorityRepository implements PriorityRepository {
 
     private static final String FIND_ALL_PRIORITIES = "FROM Priority";
 
+    /**
+     * CrudRepository
+     */
     private final CrudRepository crudRepository;
 
     /**
